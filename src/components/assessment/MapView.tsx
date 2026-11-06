@@ -7,13 +7,15 @@ import {
   RIVER_CORRIDOR_GEOJSON,
   CRITICAL_INFRASTRUCTURE_GEOJSON,
 } from '../../data/wayanadGeoJson';
-import { Layers, ChevronDown, ChevronUp, RotateCcw, Info } from 'lucide-react';
+import { Layers, ChevronDown, ChevronUp, RotateCcw, Info, PanelLeftOpen } from 'lucide-react';
 
 interface MapViewProps {
   habitations: Habitation[];
   resultsMap: Map<string, PrioritisationResult>;
   selectedHabitation: Habitation | null;
   onSelectHabitation: (habitation: Habitation) => void;
+  isSidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
 }
 
 // Center and bounds encompassing all Wayanad settlements and disaster vectors
@@ -25,6 +27,8 @@ export function MapView({
   resultsMap,
   selectedHabitation,
   onSelectHabitation,
+  isSidebarCollapsed,
+  onToggleSidebar,
 }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -223,6 +227,16 @@ export function MapView({
     };
   }, []);
 
+  // Invalidate map size whenever container dimensions change (e.g. sidebar collapse/expand)
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    const observer = new ResizeObserver(() => {
+      mapInstanceRef.current?.invalidateSize();
+    });
+    observer.observe(mapContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   // Basemap switching effect
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -415,6 +429,20 @@ export function MapView({
     <div className="relative w-full h-full min-h-[500px]">
       {/* Map Canvas */}
       <div ref={mapContainerRef} className="w-full h-full" />
+
+      {/* Top Left: Expand Settlements Panel Button (visible when sidebar is collapsed) */}
+      {isSidebarCollapsed && onToggleSidebar && (
+        <div className="absolute top-3 left-3 z-[1000]">
+          <button
+            onClick={onToggleSidebar}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white/95 backdrop-blur-xs border border-stone-300 text-stone-800 rounded-md shadow-xs text-xs font-semibold hover:bg-stone-50 cursor-pointer transition-colors"
+            title="Expand settlement list panel"
+          >
+            <PanelLeftOpen className="w-3.5 h-3.5 text-stone-600" />
+            <span>Show Settlements ({habitations.length})</span>
+          </button>
+        </div>
+      )}
 
       {/* Top Right: Layer Controls & Extent Reset */}
       <div className="absolute top-3 right-3 z-[1000] flex items-center gap-2">

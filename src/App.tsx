@@ -10,6 +10,7 @@ import { EvidenceSeverityMatrix } from './components/assessment/EvidenceSeverity
 import { HabitationList } from './components/assessment/HabitationList';
 import { MapView } from './components/assessment/MapView';
 import { HabitationDetailDrawer } from './components/assessment/HabitationDetailDrawer';
+import { ParameterComparisonView } from './components/analytics/ParameterComparisonView';
 import { EvidenceView } from './components/evidence/EvidenceView';
 import { MethodologyView } from './components/methodology/MethodologyView';
 
@@ -46,6 +47,8 @@ export function App() {
   const [activeFilter, setActiveFilter] = useState<SummaryFilter>('ALL');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
   const [isMatrixOpen, setIsMatrixOpen] = useState<boolean>(false);
+  const [isCompareOpen, setIsCompareOpen] = useState<boolean>(false);
+  const [isSettlementListOpen, setIsSettlementListOpen] = useState<boolean>(true);
   const [mobileWorkspaceTab, setMobileWorkspaceTab] = useState<'split' | 'map' | 'list'>('split');
 
   // Synchronize browser history and popstate events
@@ -129,7 +132,20 @@ export function App() {
               onFilterChange={setActiveFilter}
               isMatrixOpen={isMatrixOpen}
               onToggleMatrix={() => setIsMatrixOpen(!isMatrixOpen)}
+              isCompareOpen={isCompareOpen}
+              onToggleCompare={() => setIsCompareOpen(!isCompareOpen)}
             />
+
+            {/* Collapsible Parameter Comparison Visualisation */}
+            {isCompareOpen && (
+              <ParameterComparisonView
+                habitations={WAYANAD_HABITATIONS}
+                resultsMap={resultsMap}
+                selectedHabitation={selectedHabitation}
+                onSelectHabitation={handleSelectHabitation}
+                onClose={() => setIsCompareOpen(false)}
+              />
+            )}
 
             {/* Collapsible 2D Contingency Matrix */}
             {isMatrixOpen && (
@@ -169,35 +185,48 @@ export function App() {
               </button>
             </div>
 
-            {/* Split Map-First Workspace */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-[600px]">
-              {/* Left Column: Settlement List (5 Cols) */}
-              <div className={`lg:col-span-5 h-[550px] lg:h-[600px] flex flex-col ${
-                mobileWorkspaceTab === 'map' ? 'hidden lg:flex' : 'flex'
-              }`}>
-                <HabitationList
-                  habitations={WAYANAD_HABITATIONS}
-                  resultsMap={resultsMap}
-                  selectedHabitation={selectedHabitation}
-                  onSelectHabitation={handleSelectHabitation}
-                  activeFilter={activeFilter}
-                />
-              </div>
+            {/* Map-First Workspace Layout (Map 75-80% / Settlement List Collapsible ~20-25%) */}
+            <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-[620px] relative items-stretch">
+              {/* Left Column: Settlement List (Collapsible, ~22-25% width on desktop) */}
+              {isSettlementListOpen && (
+                <div
+                  className={`w-full lg:w-80 lg:shrink-0 h-[520px] lg:h-[620px] flex flex-col ${
+                    mobileWorkspaceTab === 'map' ? 'hidden lg:flex' : 'flex'
+                  }`}
+                >
+                  <HabitationList
+                    habitations={WAYANAD_HABITATIONS}
+                    resultsMap={resultsMap}
+                    selectedHabitation={selectedHabitation}
+                    onSelectHabitation={handleSelectHabitation}
+                    activeFilter={activeFilter}
+                    onToggleCollapse={() => setIsSettlementListOpen(false)}
+                  />
+                </div>
+              )}
 
-              {/* Right Column: Interactive Leaflet Map (7 Cols) with Drawer Overlay */}
-              <div className={`lg:col-span-7 h-[550px] lg:h-[600px] relative rounded-lg overflow-hidden border border-stone-200 shadow-xs bg-stone-100 ${
-                mobileWorkspaceTab === 'list' ? 'hidden lg:block' : 'block'
-              }`}>
+              {/* Right Column: Interactive Leaflet Map (Occupies 75-80% when list open, 100% when collapsed) */}
+              <div
+                className={`flex-1 h-[520px] lg:h-[620px] relative rounded-lg overflow-hidden border border-stone-200 shadow-xs bg-stone-100 ${
+                  mobileWorkspaceTab === 'list' ? 'hidden lg:block' : 'block'
+                }`}
+              >
                 <MapView
                   habitations={WAYANAD_HABITATIONS}
                   resultsMap={resultsMap}
                   selectedHabitation={selectedHabitation}
                   onSelectHabitation={handleSelectHabitation}
+                  isSidebarCollapsed={!isSettlementListOpen}
+                  onToggleSidebar={() => setIsSettlementListOpen(true)}
                 />
 
                 {/* Selected Habitation Inspection Drawer Overlay */}
                 {isDrawerOpen && selectedHabitation && (
-                  <div className="absolute top-3 left-3 z-[1000] w-80 max-w-[calc(100%-24px)] pointer-events-auto">
+                  <div
+                    className={`absolute ${
+                      !isSettlementListOpen ? 'top-12' : 'top-3'
+                    } left-3 z-[1000] w-80 max-w-[calc(100%-24px)] pointer-events-auto`}
+                  >
                     <HabitationDetailDrawer
                       habitation={selectedHabitation}
                       result={selectedResult}
@@ -217,6 +246,7 @@ export function App() {
             habitations={WAYANAD_HABITATIONS}
             selectedHabitation={selectedHabitation}
             result={selectedResult}
+            resultsMap={resultsMap}
             onSelectHabitation={handleSelectHabitation}
             onReturnToMap={() => setActiveTab('assessment')}
           />

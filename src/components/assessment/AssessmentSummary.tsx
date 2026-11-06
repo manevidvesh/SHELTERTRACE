@@ -1,4 +1,4 @@
-import { Grid, ChevronDown, ChevronUp } from 'lucide-react';
+import { Grid, ChevronDown, ChevronUp, BarChart3 } from 'lucide-react';
 import type { PrioritisationResult, HazardUrgency, EvidenceQuality } from '../../types/habitation';
 
 export type SummaryFilter = 'ALL' | HazardUrgency | EvidenceQuality;
@@ -9,6 +9,8 @@ interface AssessmentSummaryProps {
   onFilterChange: (filter: SummaryFilter) => void;
   isMatrixOpen?: boolean;
   onToggleMatrix?: () => void;
+  isCompareOpen?: boolean;
+  onToggleCompare?: () => void;
 }
 
 export function AssessmentSummary({
@@ -17,6 +19,8 @@ export function AssessmentSummary({
   onFilterChange,
   isMatrixOpen,
   onToggleMatrix,
+  isCompareOpen,
+  onToggleCompare,
 }: AssessmentSummaryProps) {
   const total = results.length;
 
@@ -104,21 +108,38 @@ export function AssessmentSummary({
           </button>
         </div>
 
-        {/* Right: Matrix View Toggle Button */}
-        {onToggleMatrix && (
-          <button
-            onClick={onToggleMatrix}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium border transition-colors cursor-pointer shrink-0 ${
-              isMatrixOpen
-                ? 'bg-[#233f33] text-white border-[#233f33]'
-                : 'bg-stone-50 text-stone-700 hover:bg-stone-100 border-stone-300'
-            }`}
-          >
-            <Grid className="w-3.5 h-3.5" />
-            <span>Analytical 2D Matrix</span>
-            {isMatrixOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          </button>
-        )}
+        {/* Right: Matrix & Parameter Comparison View Toggle Buttons */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {onToggleCompare && (
+            <button
+              onClick={onToggleCompare}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium border transition-colors cursor-pointer shrink-0 ${
+                isCompareOpen
+                  ? 'bg-[#233f33] text-white border-[#233f33]'
+                  : 'bg-stone-50 text-stone-700 hover:bg-stone-100 border-stone-300'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>Parameter Comparison</span>
+              {isCompareOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
+          )}
+
+          {onToggleMatrix && (
+            <button
+              onClick={onToggleMatrix}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium border transition-colors cursor-pointer shrink-0 ${
+                isMatrixOpen
+                  ? 'bg-[#233f33] text-white border-[#233f33]'
+                  : 'bg-stone-50 text-stone-700 hover:bg-stone-100 border-stone-300'
+              }`}
+            >
+              <Grid className="w-3.5 h-3.5" />
+              <span>Analytical 2D Matrix</span>
+              {isMatrixOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Epistemic Evidence Quality Sub-Bar (Subtle, non-competing) */}

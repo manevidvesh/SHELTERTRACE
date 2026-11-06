@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ChevronRight } from 'lucide-react';
+import { Search, ChevronRight, PanelLeftClose } from 'lucide-react';
 import type { Habitation, PrioritisationResult } from '../../types/habitation';
 import type { SummaryFilter } from './AssessmentSummary';
 import { HazardUrgencyBadge, EvidenceQualityBadge, ProvenanceTypeBadge } from '../common/Badge';
@@ -10,6 +10,7 @@ interface HabitationListProps {
   selectedHabitation: Habitation | null;
   onSelectHabitation: (habitation: Habitation) => void;
   activeFilter: SummaryFilter;
+  onToggleCollapse?: () => void;
 }
 
 export function HabitationList({
@@ -18,6 +19,7 @@ export function HabitationList({
   selectedHabitation,
   onSelectHabitation,
   activeFilter,
+  onToggleCollapse,
 }: HabitationListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -61,13 +63,24 @@ export function HabitationList({
       {/* Header & Search */}
       <div className="p-3 border-b border-stone-200 bg-stone-50/70 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-stone-900 tracking-tight">
-            Assessed Settlements ({filteredHabitations.length})
-          </span>
-          {activeFilter !== 'ALL' && (
-            <span className="text-[11px] text-stone-600 bg-white px-2 py-0.5 rounded border border-stone-200">
-              Filter: {activeFilter}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-xs font-semibold text-stone-900 tracking-tight">
+              Settlements ({filteredHabitations.length})
             </span>
+            {activeFilter !== 'ALL' && (
+              <span className="text-[10px] text-stone-600 bg-white px-1.5 py-0.2 rounded border border-stone-200">
+                {activeFilter}
+              </span>
+            )}
+          </div>
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              className="p-1 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 cursor-pointer transition-colors"
+              title="Collapse settlement list panel to expand map"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
           )}
         </div>
 

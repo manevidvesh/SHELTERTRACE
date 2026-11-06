@@ -11,6 +11,7 @@ import {
   Sliders,
   CheckSquare,
   ArrowLeft,
+  BarChart3,
 } from 'lucide-react';
 import type { Habitation, PrioritisationResult } from '../../types/habitation';
 import type { EvidenceDomain } from '../../types/evidence';
@@ -23,9 +24,11 @@ import { SpatialUncertaintySection } from './SpatialUncertaintySection';
 import { ConflictRegisterSection } from './ConflictRegisterSection';
 import { PriorityStabilitySection } from './PriorityStabilitySection';
 import { LocalReviewAuditSection } from './LocalReviewAuditSection';
+import { ParameterComparisonView } from '../analytics/ParameterComparisonView';
 
 type EvidenceDossierTab =
   | 'PROVENANCE_AND_CARDS'
+  | 'PARAMETER_COMPARISON'
   | 'TEMPORAL_TIMELINE'
   | 'SPATIAL_UNCERTAINTY'
   | 'CONFLICT_REGISTER'
@@ -36,6 +39,7 @@ interface EvidenceViewProps {
   habitations: Habitation[];
   selectedHabitation: Habitation;
   result: PrioritisationResult;
+  resultsMap: Map<string, PrioritisationResult>;
   onSelectHabitation: (habitation: Habitation) => void;
   onReturnToMap: () => void;
 }
@@ -44,6 +48,7 @@ export function EvidenceView({
   habitations,
   selectedHabitation,
   result,
+  resultsMap,
   onSelectHabitation,
   onReturnToMap,
 }: EvidenceViewProps) {
@@ -59,12 +64,13 @@ export function EvidenceView({
   ];
 
   const subTabs: { key: EvidenceDossierTab; label: string; icon: typeof GitCommit }[] = [
-    { key: 'PROVENANCE_AND_CARDS', label: '1. Provenance & Dossier', icon: GitCommit },
-    { key: 'TEMPORAL_TIMELINE', label: '2. Temporal Timeline', icon: Clock },
-    { key: 'SPATIAL_UNCERTAINTY', label: '3. Spatial Quality & CRS', icon: Compass },
-    { key: 'CONFLICT_REGISTER', label: '4. Conflict Register', icon: AlertTriangle },
-    { key: 'PRIORITY_STABILITY', label: '5. Priority Stability', icon: Sliders },
-    { key: 'FIELD_DIRECTIVES_AUDIT', label: '6. Field Directives & Audit', icon: CheckSquare },
+    { key: 'PROVENANCE_AND_CARDS', label: '1. Provenance DAG & Dossier', icon: GitCommit },
+    { key: 'PARAMETER_COMPARISON', label: '2. Parameter Comparison', icon: BarChart3 },
+    { key: 'TEMPORAL_TIMELINE', label: '3. Temporal Timeline', icon: Clock },
+    { key: 'SPATIAL_UNCERTAINTY', label: '4. Spatial Quality & CRS', icon: Compass },
+    { key: 'CONFLICT_REGISTER', label: '5. Conflict Register', icon: AlertTriangle },
+    { key: 'PRIORITY_STABILITY', label: '6. Priority Stability', icon: Sliders },
+    { key: 'FIELD_DIRECTIVES_AUDIT', label: '7. Field Directives & Audit', icon: CheckSquare },
   ];
 
   return (
@@ -334,7 +340,17 @@ export function EvidenceView({
         </div>
       )}
 
-      {/* Tab 2: Temporal Evidence Intelligence */}
+      {/* Tab 2: Parameter Comparison Graph */}
+      {activeDossierTab === 'PARAMETER_COMPARISON' && (
+        <ParameterComparisonView
+          habitations={habitations}
+          resultsMap={resultsMap}
+          selectedHabitation={selectedHabitation}
+          onSelectHabitation={onSelectHabitation}
+        />
+      )}
+
+      {/* Tab 3: Temporal Evidence Intelligence */}
       {activeDossierTab === 'TEMPORAL_TIMELINE' && (
         <EvidenceTimelineView habitation={selectedHabitation} />
       )}

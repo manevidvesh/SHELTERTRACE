@@ -157,32 +157,42 @@ export function LandingPage({ onOpenApp }: LandingPageProps) {
               </div>
             </div>
 
-            {/* Right Side: HUGE Unboxed Mountain Valley Terrain Image */}
+            {/* Right Side: Unboxed Geospatial Remote Sensing & Terrain Investigation Visual */}
             <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
               {/* Natural blended image container with zero rectangular border */}
               <div className="relative w-full max-w-lg lg:max-w-none">
                 <div
-                  className="relative w-full aspect-[4/3] lg:aspect-[16/11] rounded-2xl overflow-hidden"
+                  className="relative w-full aspect-[4/3] lg:aspect-[16/11] rounded-2xl overflow-hidden shadow-2xs"
                   style={{
-                    maskImage: 'radial-gradient(ellipse 95% 90% at 55% 50%, black 50%, transparent 95%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 95% 90% at 55% 50%, black 50%, transparent 95%)',
+                    maskImage: 'radial-gradient(ellipse 96% 92% at 52% 48%, black 55%, transparent 98%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 96% 92% at 52% 48%, black 55%, transparent 98%)',
                   }}
                 >
                   <img
-                    src="/terrain-hero.jpg"
-                    alt="Aerial mountain valley terrain survey visual"
-                    className="w-full h-full object-cover object-center transform scale-105 filter contrast-[1.03] saturate-[0.98]"
+                    src="/geospatial-hero.jpg"
+                    alt="Geospatial remote sensing and terrain investigation visual"
+                    className="w-full h-full object-cover object-center transform scale-102 filter contrast-[1.02] saturate-[0.98]"
                   />
 
-                  {/* Gradient overlays to melt edges into warm off-white background */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#f8f7f4] via-transparent to-transparent opacity-80" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#f8f7f4] via-transparent to-transparent opacity-60" />
+                  {/* Gradient overlays to melt edges smoothly into warm off-white background */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#f8f7f4] via-transparent to-transparent opacity-75" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#f8f7f4] via-transparent to-transparent opacity-65" />
                   <div className="absolute inset-0 bg-gradient-to-b from-[#f8f7f4]/40 via-transparent to-transparent" />
+
+                  {/* Subtle Cartographic Telemetry Overlays */}
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded bg-stone-900/80 backdrop-blur-xs text-white text-[10px] font-mono tracking-tight border border-white/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>11°32'N, 76°09'E &bull; 750-1240m MSL</span>
+                  </div>
+
+                  <div className="absolute bottom-3 right-3 hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded bg-stone-900/80 backdrop-blur-xs text-white text-[9px] font-mono tracking-tight border border-white/20">
+                    <span>DEMO COMPOSITION &bull; MULTI-LAYER RECONNAISSANCE</span>
+                  </div>
                 </div>
 
-                {/* Subtle caption */}
-                <p className="text-[10px] text-stone-600 text-right mt-2 mr-4 italic">
-                  Illustrative mountainous valley terrain survey visual • Not raw satellite imagery of disaster site.
+                {/* Explicit Data Integrity Caption */}
+                <p className="text-[10px] text-stone-500 text-right mt-2 mr-2 font-sans italic">
+                  Conceptual Geospatial Investigation Model &bull; Illustrative composition depicting terrain contours, runout corridor, and multi-source evidence nodes. Not official survey boundaries.
                 </p>
               </div>
             </div>
