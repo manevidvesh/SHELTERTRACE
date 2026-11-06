@@ -61,3 +61,10 @@
   font-size: 11px !important;
   padding: 4px 8px !important;
 }
+
+/* Custom Leaflet Marker container resets */
+.custom-habitation-marker,
+.custom-infra-icon {
+  background: transparent !important;
+  border: none !important;
+}

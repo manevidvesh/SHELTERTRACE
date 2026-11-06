@@ -46,6 +46,7 @@ export function App() {
   const [activeFilter, setActiveFilter] = useState<SummaryFilter>('ALL');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
   const [isMatrixOpen, setIsMatrixOpen] = useState<boolean>(false);
+  const [mobileWorkspaceTab, setMobileWorkspaceTab] = useState<'split' | 'map' | 'list'>('split');
 
   // Synchronize browser history and popstate events
   useEffect(() => {
@@ -140,10 +141,40 @@ export function App() {
               />
             )}
 
+            {/* Mobile Workspace Mode Switcher (visible on <lg screens) */}
+            <div className="flex lg:hidden items-center justify-between p-1 bg-stone-200/70 rounded-lg text-xs font-medium gap-1">
+              <button
+                onClick={() => setMobileWorkspaceTab('split')}
+                className={`flex-1 py-1 px-2 rounded text-center transition-colors cursor-pointer ${
+                  mobileWorkspaceTab === 'split' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                Split View
+              </button>
+              <button
+                onClick={() => setMobileWorkspaceTab('map')}
+                className={`flex-1 py-1 px-2 rounded text-center transition-colors cursor-pointer ${
+                  mobileWorkspaceTab === 'map' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                Interactive Map
+              </button>
+              <button
+                onClick={() => setMobileWorkspaceTab('list')}
+                className={`flex-1 py-1 px-2 rounded text-center transition-colors cursor-pointer ${
+                  mobileWorkspaceTab === 'list' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                Settlements ({WAYANAD_HABITATIONS.length})
+              </button>
+            </div>
+
             {/* Split Map-First Workspace */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-[600px]">
               {/* Left Column: Settlement List (5 Cols) */}
-              <div className="lg:col-span-5 h-[600px] flex flex-col">
+              <div className={`lg:col-span-5 h-[550px] lg:h-[600px] flex flex-col ${
+                mobileWorkspaceTab === 'map' ? 'hidden lg:flex' : 'flex'
+              }`}>
                 <HabitationList
                   habitations={WAYANAD_HABITATIONS}
                   resultsMap={resultsMap}
@@ -154,7 +185,9 @@ export function App() {
               </div>
 
               {/* Right Column: Interactive Leaflet Map (7 Cols) with Drawer Overlay */}
-              <div className="lg:col-span-7 h-[600px] relative rounded-lg overflow-hidden border border-stone-200 shadow-xs bg-stone-100">
+              <div className={`lg:col-span-7 h-[550px] lg:h-[600px] relative rounded-lg overflow-hidden border border-stone-200 shadow-xs bg-stone-100 ${
+                mobileWorkspaceTab === 'list' ? 'hidden lg:block' : 'block'
+              }`}>
                 <MapView
                   habitations={WAYANAD_HABITATIONS}
                   resultsMap={resultsMap}

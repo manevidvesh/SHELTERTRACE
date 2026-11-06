@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, ChevronRight } from 'lucide-react';
 import type { Habitation, PrioritisationResult } from '../../types/habitation';
 import type { SummaryFilter } from './AssessmentSummary';
@@ -20,6 +20,17 @@ export function HabitationList({
   activeFilter,
 }: HabitationListProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  // Bidirectional sync: scroll selected settlement into view when clicked on map or changed
+  useEffect(() => {
+    if (selectedHabitation) {
+      const el = itemRefs.current.get(selectedHabitation.id);
+      if (el) {
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+  }, [selectedHabitation?.id]);
 
   // Filter habitations based on activeFilter and searchQuery
   const filteredHabitations = habitations.filter(hab => {
@@ -87,6 +98,10 @@ export function HabitationList({
             return (
               <div
                 key={hab.id}
+                ref={el => {
+                  if (el) itemRefs.current.set(hab.id, el);
+                  else itemRefs.current.delete(hab.id);
+                }}
                 onClick={() => onSelectHabitation(hab)}
                 className={`p-3 text-left transition-colors cursor-pointer group ${
                   isSelected
