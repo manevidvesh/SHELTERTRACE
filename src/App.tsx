@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Habitation, PrioritisationResult } from './types/habitation';
 import type { SummaryFilter } from './components/assessment/AssessmentSummary';
 import { WAYANAD_HABITATIONS } from './data/wayanadHabitations';
 import { assessHabitation } from './engine/assessmentEngine';
+import { LandingPage } from './components/landing/LandingPage';
 import { Header } from './components/common/Header';
 import { AssessmentSummary } from './components/assessment/AssessmentSummary';
 import { EvidenceSeverityMatrix } from './components/assessment/EvidenceSeverityMatrix';
@@ -12,12 +13,62 @@ import { HabitationDetailDrawer } from './components/assessment/HabitationDetail
 import { EvidenceView } from './components/evidence/EvidenceView';
 import { MethodologyView } from './components/methodology/MethodologyView';
 
+function getInitialRoute(): { view: 'landing' | 'app'; tab: 'assessment' | 'evidence' | 'methodology' } {
+  if (typeof window === 'undefined') return { view: 'landing', tab: 'assessment' };
+
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase();
+
+  // If URL explicitly requests dashboard/app/assessment
+  if (
+    path.includes('/dashboard') ||
+    path.includes('/app') ||
+    path.includes('/assessment') ||
+    hash.includes('app') ||
+    hash.includes('dashboard')
+  ) {
+    if (hash.includes('methodology') || path.includes('methodology')) {
+      return { view: 'app', tab: 'methodology' };
+    }
+    if (hash.includes('evidence') || path.includes('evidence')) {
+      return { view: 'app', tab: 'evidence' };
+    }
+    return { view: 'app', tab: 'assessment' };
+  }
+
+  return { view: 'landing', tab: 'assessment' };
+}
+
 export function App() {
-  const [activeTab, setActiveTab] = useState<'assessment' | 'evidence' | 'methodology'>('assessment');
+  const [currentView, setCurrentView] = useState<'landing' | 'app'>(() => getInitialRoute().view);
+  const [activeTab, setActiveTab] = useState<'assessment' | 'evidence' | 'methodology'>(() => getInitialRoute().tab);
   const [selectedHabitationId, setSelectedHabitationId] = useState<string>('hab-mundakkai');
   const [activeFilter, setActiveFilter] = useState<SummaryFilter>('ALL');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
   const [isMatrixOpen, setIsMatrixOpen] = useState<boolean>(false);
+
+  // Synchronize browser history and popstate events
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = getInitialRoute();
+      setCurrentView(route.view);
+      setActiveTab(route.tab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleOpenApp = (tab: 'assessment' | 'evidence' | 'methodology' = 'assessment') => {
+    setActiveTab(tab);
+    setCurrentView('app');
+    window.history.pushState({ view: 'app', tab }, '', `/dashboard#${tab}`);
+  };
+
+  const handleReturnToLanding = () => {
+    setCurrentView('landing');
+    window.history.pushState({ view: 'landing' }, '', '/');
+  };
 
   // Evaluate all habitations through deterministic assessment engine
   const resultsMap = useMemo(() => {
@@ -49,6 +100,12 @@ export function App() {
     setActiveTab('evidence');
   };
 
+  // View 1: Demonstration Landing Page
+  if (currentView === 'landing') {
+    return <LandingPage onOpenApp={handleOpenApp} />;
+  }
+
+  // View 2: Operational Investigation Workspace
   return (
     <div className="min-h-screen bg-[#f8f7f4] text-stone-900 flex flex-col font-sans">
       {/* Universal Top Header */}
@@ -56,6 +113,7 @@ export function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         selectedHabitation={selectedHabitation}
+        onReturnToLanding={handleReturnToLanding}
       />
 
       {/* Main Content Area */}

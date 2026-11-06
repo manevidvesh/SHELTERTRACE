@@ -25,6 +25,9 @@ export function MapView({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
 
+  // Basemap selection (verified legitimate keyless providers)
+  const [activeBasemap, setActiveBasemap] = useState<'topo' | 'osm'>('topo');
+
   // Layer visibility toggles
   const [showObservedDebris, setShowObservedDebris] = useState(true);
   const [showModelledSusc, setShowModelledSusc] = useState(true);
@@ -34,6 +37,8 @@ export function MapView({
   const [isLayersOpen, setIsLayersOpen] = useState(false);
 
   // References to layer groups for toggling
+  const topoLayerRef = useRef<L.TileLayer | null>(null);
+  const osmLayerRef = useRef<L.TileLayer | null>(null);
   const debrisLayerRef = useRef<L.GeoJSON | null>(null);
   const suscLayerRef = useRef<L.GeoJSON | null>(null);
   const riverLayerRef = useRef<L.GeoJSON | null>(null);
@@ -52,13 +57,30 @@ export function MapView({
       attributionControl: true,
     });
 
-    // CartoDB Voyager tiles for modern, elegant cartographic presentation
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19,
-    }).addTo(map);
+    // 1. Esri World Topographic Map (Default: legitimate keyless public topographic service showing relief & contours)
+    const topoLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution:
+          'Tiles &copy; Esri &mdash; Sources: Esri, USGS, NOAA, DeLorme, &copy; OpenStreetMap contributors',
+        maxZoom: 19,
+      }
+    );
+    topoLayerRef.current = topoLayer;
+
+    // 2. OpenStreetMap Standard (Alternative: keyless global open community cartography)
+    const osmLayer = L.tileLayer(
+      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }
+    );
+    osmLayerRef.current = osmLayer;
+
+    // Add default basemap
+    topoLayer.addTo(map);
 
     // 1. Modelled Susceptibility Layer (Illustrative Approximation)
     const suscLayer = L.geoJSON(MODELLED_SUSCEPTIBILITY_GEOJSON as any, {
@@ -148,6 +170,28 @@ export function MapView({
       mapInstanceRef.current = null;
     };
   }, []);
+
+  // Basemap switching effect
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !topoLayerRef.current || !osmLayerRef.current) return;
+
+    if (activeBasemap === 'topo') {
+      if (map.hasLayer(osmLayerRef.current)) {
+        map.removeLayer(osmLayerRef.current);
+      }
+      if (!map.hasLayer(topoLayerRef.current)) {
+        map.addLayer(topoLayerRef.current);
+      }
+    } else {
+      if (map.hasLayer(topoLayerRef.current)) {
+        map.removeLayer(topoLayerRef.current);
+      }
+      if (!map.hasLayer(osmLayerRef.current)) {
+        map.addLayer(osmLayerRef.current);
+      }
+    }
+  }, [activeBasemap]);
 
   // Update Habitation Markers whenever habitations, results, or selectedHabitation changes
   useEffect(() => {
@@ -275,65 +319,97 @@ export function MapView({
           </button>
 
           {isLayersOpen && (
-            <div className="absolute right-0 mt-1 w-64 bg-white border border-stone-200 rounded-md shadow-lg p-3 text-xs space-y-2 text-stone-700 animate-in fade-in">
-              <div className="font-medium text-stone-900 pb-1.5 border-b border-stone-100 text-[11px]">
-                Toggle Cartographic Overlays
+            <div className="absolute right-0 mt-1 w-64 bg-white border border-stone-200 rounded-md shadow-lg p-3 text-xs space-y-3 text-stone-700 animate-in fade-in">
+              {/* Basemap Selection */}
+              <div className="space-y-1.5">
+                <div className="font-semibold text-stone-900 text-[11px]">
+                  Basemap Cartography
+                </div>
+                <div className="grid grid-cols-2 gap-1 p-0.5 bg-stone-100 rounded border border-stone-200">
+                  <button
+                    onClick={() => setActiveBasemap('topo')}
+                    className={`py-1 px-2 rounded text-[10px] font-medium transition-colors cursor-pointer ${
+                      activeBasemap === 'topo'
+                        ? 'bg-white text-stone-900 shadow-xs'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    Topo Relief (Esri)
+                  </button>
+                  <button
+                    onClick={() => setActiveBasemap('osm')}
+                    className={`py-1 px-2 rounded text-[10px] font-medium transition-colors cursor-pointer ${
+                      activeBasemap === 'osm'
+                        ? 'bg-white text-stone-900 shadow-xs'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    Standard (OSM)
+                  </button>
+                </div>
               </div>
 
-              <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
-                <input
-                  type="checkbox"
-                  checked={showHabitations}
-                  onChange={e => setShowHabitations(e.target.checked)}
-                  className="rounded text-stone-900 focus:ring-0"
-                />
-                <span className="w-2.5 h-2.5 rounded-full bg-red-700" />
-                <span>Habitation Sites (9)</span>
-              </label>
+              {/* Overlays */}
+              <div className="space-y-2 pt-2 border-t border-stone-100">
+                <div className="font-semibold text-stone-900 text-[11px]">
+                  Disaster Overlays
+                </div>
 
-              <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
-                <input
-                  type="checkbox"
-                  checked={showObservedDebris}
-                  onChange={e => setShowObservedDebris(e.target.checked)}
-                  className="rounded text-stone-900 focus:ring-0"
-                />
-                <span className="w-2.5 h-2.5 rounded bg-red-200 border border-red-700" />
-                <span>Debris Corridor (Approx Vector)</span>
-              </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
+                  <input
+                    type="checkbox"
+                    checked={showHabitations}
+                    onChange={e => setShowHabitations(e.target.checked)}
+                    className="rounded text-stone-900 focus:ring-0"
+                  />
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-700" />
+                  <span>Habitation Sites (9)</span>
+                </label>
 
-              <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
-                <input
-                  type="checkbox"
-                  checked={showModelledSusc}
-                  onChange={e => setShowModelledSusc(e.target.checked)}
-                  className="rounded text-stone-900 focus:ring-0"
-                />
-                <span className="w-2.5 h-2.5 rounded bg-amber-100 border border-amber-600 border-dashed" />
-                <span>Susceptibility Zone (GSI NLSM)</span>
-              </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
+                  <input
+                    type="checkbox"
+                    checked={showObservedDebris}
+                    onChange={e => setShowObservedDebris(e.target.checked)}
+                    className="rounded text-stone-900 focus:ring-0"
+                  />
+                  <span className="w-2.5 h-2.5 rounded bg-red-200 border border-red-700" />
+                  <span>Debris Corridor (Approx Vector)</span>
+                </label>
 
-              <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
-                <input
-                  type="checkbox"
-                  checked={showRiverAxis}
-                  onChange={e => setShowRiverAxis(e.target.checked)}
-                  className="rounded text-stone-900 focus:ring-0"
-                />
-                <span className="w-2.5 h-2.5 rounded bg-sky-200 border border-sky-600" />
-                <span>Iruvaipuzha River Axis</span>
-              </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
+                  <input
+                    type="checkbox"
+                    checked={showModelledSusc}
+                    onChange={e => setShowModelledSusc(e.target.checked)}
+                    className="rounded text-stone-900 focus:ring-0"
+                  />
+                  <span className="w-2.5 h-2.5 rounded bg-amber-100 border border-amber-600 border-dashed" />
+                  <span>Susceptibility Zone (GSI NLSM)</span>
+                </label>
 
-              <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
-                <input
-                  type="checkbox"
-                  checked={showInfraPoints}
-                  onChange={e => setShowInfraPoints(e.target.checked)}
-                  className="rounded text-stone-900 focus:ring-0"
-                />
-                <span className="w-2.5 h-2.5 rounded-full bg-red-700" />
-                <span>Critical Infrastructure Points</span>
-              </label>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
+                  <input
+                    type="checkbox"
+                    checked={showRiverAxis}
+                    onChange={e => setShowRiverAxis(e.target.checked)}
+                    className="rounded text-stone-900 focus:ring-0"
+                  />
+                  <span className="w-2.5 h-2.5 rounded bg-sky-200 border border-sky-600" />
+                  <span>Iruvaipuzha River Axis</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer hover:text-stone-900">
+                  <input
+                    type="checkbox"
+                    checked={showInfraPoints}
+                    onChange={e => setShowInfraPoints(e.target.checked)}
+                    className="rounded text-stone-900 focus:ring-0"
+                  />
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-700" />
+                  <span>Critical Infrastructure Points</span>
+                </label>
+              </div>
             </div>
           )}
         </div>

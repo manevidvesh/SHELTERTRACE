@@ -6,9 +6,10 @@ interface HeaderProps {
   activeTab: 'assessment' | 'evidence' | 'methodology';
   setActiveTab: (tab: 'assessment' | 'evidence' | 'methodology') => void;
   selectedHabitation: Habitation | null;
+  onReturnToLanding?: () => void;
 }
 
-export function Header({ activeTab, setActiveTab, selectedHabitation }: HeaderProps) {
+export function Header({ activeTab, setActiveTab, selectedHabitation, onReturnToLanding }: HeaderProps) {
   const [showLegalNotice, setShowLegalNotice] = useState(false);
 
   return (
@@ -16,6 +17,14 @@ export function Header({ activeTab, setActiveTab, selectedHabitation }: HeaderPr
       {/* Context & Governance Sub-Bar */}
       <div className="bg-[#f4f2ee] px-4 sm:px-6 py-1.5 border-b border-stone-200/80 flex items-center justify-between text-xs text-stone-600">
         <div className="flex items-center gap-2">
+          {onReturnToLanding && (
+            <button
+              onClick={onReturnToLanding}
+              className="text-[11px] text-stone-500 hover:text-stone-900 font-medium underline underline-offset-2 mr-1 cursor-pointer"
+            >
+              &larr; Overview
+            </button>
+          )}
           <span className="inline-flex items-center px-2 py-0.5 rounded bg-white text-stone-700 border border-stone-200 text-[11px] font-medium">
             Wayanad Case Study (July 2024 Event)
           </span>
@@ -37,15 +46,21 @@ export function Header({ activeTab, setActiveTab, selectedHabitation }: HeaderPr
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded bg-[#233f33] text-white flex items-center justify-center font-bold text-sm tracking-wide shadow-xs">
+        <div
+          onClick={onReturnToLanding}
+          className={`flex items-center gap-3 ${onReturnToLanding ? 'cursor-pointer group' : ''}`}
+          title={onReturnToLanding ? 'Return to demonstration overview' : undefined}
+        >
+          <div className="h-8 w-8 rounded bg-[#233f33] text-white flex items-center justify-center font-bold text-sm tracking-wide shadow-xs group-hover:bg-[#1a3027] transition-colors">
             ST
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-base font-semibold text-stone-900 tracking-tight">SHELTERTRACE</span>
+              <span className="text-base font-semibold text-stone-900 tracking-tight group-hover:text-[#233f33] transition-colors">
+                SHELTERTRACE
+              </span>
               <span className="text-[11px] px-1.5 py-0.5 bg-stone-100 text-stone-600 rounded border border-stone-200">
-                Investigation MVP
+                Investigation Workspace
               </span>
             </div>
             <p className="text-[11px] text-stone-500 hidden md:block">

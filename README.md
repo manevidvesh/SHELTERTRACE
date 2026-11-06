@@ -72,28 +72,34 @@ URGENCY       ELEVATED │ High Slope │ Secondary   │ Slope Recon  │ Revie
 
 ## 3. Platform Capabilities
 
-### A. Evidence Provenance Graph
+### A. Demonstration Landing Page (`/`)
+Editorial demonstration landing page designed for presentations and evaluation. Features an unboxed mountain valley terrain visual, introducing the fundamental problem statement, the 4-stage sequential pipeline (`Evidence` $\rightarrow$ `Spatial Findings` $\rightarrow$ `Assessment Rules` $\rightarrow$ `Field Prioritisation`), the two independent dimensions, and statutory governance without exposing operational settlement data before entering the workspace.
+
+### B. Interactive Map-First Workspace (`/dashboard`)
+Leaflet map powered by legitimate keyless cartographic providers: **Esri World Topographic Map** (rendering terrain relief, elevation contours, and drainage hollows) with an instant toggle to **OpenStreetMap Standard**. Free of watermarks or API-key restrictions, displaying 9 settlement pins, illustrative debris runout envelopes, susceptibility contours, and river channels.
+
+### C. Evidence Provenance Graph
 Interactive Directed Acyclic Graph (DAG) visualizing dependencies from source datasets (e.g. Cartosat-3, GSI 1:50k) $\rightarrow$ spatial findings $\rightarrow$ applicable decision rules $\rightarrow$ final assessment outputs. Selecting any node highlights its upstream evidence and downstream impacts.
 
-### B. Evidence vs Severity 2D Matrix
+### D. Evidence vs Severity 2D Matrix
 16-cell contingency matrix categorizing all habitations. Provides instant situational awareness of high-hazard settlements with low data quality versus verified low-hazard baseline areas.
 
-### C. Decision-Impact Field Directives
+### E. Decision-Impact Field Directives
 Analyzes specific evidence gaps for each habitation and generates prioritized reconnaissance recommendations. Explains *which* specific field observation (e.g. checking river bank scour, ground-truthing satellite mud signatures) will resolve ambiguity or shift the assessment tier.
 
-### D. Multi-Epoch Temporal Timeline
+### F. Multi-Epoch Temporal Timeline
 Tracks observation epochs, event dates, and data freshness. Distinguishes persistent geological structures (where older baselines remain valid) from perishable disaster indicators (e.g., flood crests, temporary road blockages) where outdated evidence degrades confidence.
 
-### E. Spatial Uncertainty Inspector
+### G. Spatial Uncertainty Inspector
 Exposes spatial resolution limits (e.g., 1:50,000 regional quadrangle mapping vs high-resolution satellite imagery), coordinate reference systems (WGS84 / EPSG:4326), and polygon boundary tolerances.
 
-### F. Explicit Evidence Conflict Register
+### H. Explicit Evidence Conflict Register
 Maintains an append-only registry of conflicting observations between data providers (e.g., Cartosat-3 spectral mud anomaly vs local revenue field check in Kottappadi). Preserves all contradictory findings rather than averaging or discarding them.
 
-### G. Investigation Priority Stability Analysis
+### I. Investigation Priority Stability Analysis
 Evaluates the stability of habitation prioritisation across 5 deterministic operational scenarios (e.g. lifeline restoration). Explicitly disclaims probability or statistical confidence, presenting descriptive stability across reproducible rules.
 
-### H. Local Review & Audit History
+### J. Local Review & Audit History
 In-session demonstration audit trail capturing reviewer actions, role simulations (NDRF, GSI, Revenue), timestamped overrides, and mandatory justification logs.
 
 ---
