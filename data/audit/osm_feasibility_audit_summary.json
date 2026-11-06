@@ -1,0 +1,733 @@
+{
+  "auditTimestamp": "2026-11-06T09:02:03.028Z",
+  "boundingBox": {
+    "minLon": 76.12,
+    "minLat": 11.52,
+    "maxLon": 76.175,
+    "maxLat": 11.56
+  },
+  "nodesCount": 10960,
+  "waysCount": 567,
+  "buildings": {
+    "total": 82,
+    "breakdown": {
+      "yes": 68,
+      "hospital": 2,
+      "house": 3,
+      "church": 2,
+      "school": 2,
+      "industrial": 1,
+      "hotel": 1,
+      "residential": 1,
+      "college": 2
+    },
+    "unclassifiedRate": "82.9%"
+  },
+  "roads": {
+    "totalEdges": 288,
+    "breakdown": {
+      "primary": 12,
+      "unclassified": 56,
+      "tertiary": 7,
+      "service": 17,
+      "residential": 160,
+      "path": 1,
+      "track": 31,
+      "secondary": 1,
+      "footway": 1,
+      "construction": 2
+    },
+    "bridgesCount": 3,
+    "bridges": [
+      {
+        "id": "380928376",
+        "name": "Meenakshi Bridge",
+        "highway": "primary"
+      },
+      {
+        "id": "380928377",
+        "name": "Kalpetta - Meppadi Road",
+        "highway": "primary"
+      },
+      {
+        "id": "621375796",
+        "highway": "tertiary"
+      }
+    ]
+  },
+  "criticalFacilities": {
+    "total": 115,
+    "records": [
+      {
+        "id": "380933351",
+        "type": "way",
+        "kind": "hospital",
+        "name": "DM Wayanad Institute of Medical Sciences"
+      },
+      {
+        "id": "763017314",
+        "type": "way",
+        "kind": "school",
+        "name": "CMS Higher Secondary School, Arapetta"
+      },
+      {
+        "id": "763026679",
+        "type": "way",
+        "kind": "place_of_worship"
+      },
+      {
+        "id": "763028486",
+        "type": "way",
+        "kind": "bus_station",
+        "name": "Meppadi"
+      },
+      {
+        "id": "763028769",
+        "type": "way",
+        "kind": "place_of_worship"
+      },
+      {
+        "id": "763029796",
+        "type": "way",
+        "kind": "hospital",
+        "name": "Communinty Health Centre Meppadi"
+      },
+      {
+        "id": "804086142",
+        "type": "way",
+        "kind": "hospital",
+        "name": "DM WIMS"
+      },
+      {
+        "id": "804180238",
+        "type": "way",
+        "kind": "events_venue",
+        "name": "St Joseph's parish hall"
+      },
+      {
+        "id": "804180240",
+        "type": "way",
+        "kind": "hospital",
+        "name": "hml hospital"
+      },
+      {
+        "id": "804180242",
+        "type": "way",
+        "kind": "place_of_worship",
+        "name": "St Joseph's church"
+      },
+      {
+        "id": "839881923",
+        "type": "way",
+        "kind": "school",
+        "name": "St. Joseph's Upper Primary School, Meppadi"
+      },
+      {
+        "id": "839882452",
+        "type": "way",
+        "kind": "school",
+        "name": "St.Joseph Girls High School, Meppadi"
+      },
+      {
+        "id": "839882734",
+        "type": "way",
+        "kind": "school",
+        "name": "Mount Tabor English School, Meppadi"
+      },
+      {
+        "id": "839884005",
+        "type": "way",
+        "kind": "school",
+        "name": "WMO English Medium School, Meppadi"
+      },
+      {
+        "id": "839885501",
+        "type": "way",
+        "kind": "school",
+        "name": "Government Lower Primary School, Chulikka"
+      },
+      {
+        "id": "839891096",
+        "type": "way",
+        "kind": "school",
+        "name": "Meenakshi estatte pady"
+      },
+      {
+        "id": "839911667",
+        "type": "way",
+        "kind": "school",
+        "name": "Government Higher Secondary School, Meppadi"
+      },
+      {
+        "id": "905019578",
+        "type": "way",
+        "kind": "place_of_worship",
+        "name": "Arrapetta juma masjid"
+      },
+      {
+        "id": "905133115",
+        "type": "way",
+        "kind": "conference_centre",
+        "name": "Meppadi Convention center"
+      },
+      {
+        "id": "905451349",
+        "type": "way",
+        "kind": "place_of_worship",
+        "name": "Meppadi mosque"
+      },
+      {
+        "id": "905452585",
+        "type": "way",
+        "kind": "restaurant",
+        "name": "Malabar Hotel and tourist home"
+      },
+      {
+        "id": "936313317",
+        "type": "way",
+        "kind": "college"
+      },
+      {
+        "id": "995812041",
+        "type": "way",
+        "kind": "alternative",
+        "name": "Government Ayurveda Mobile Dispensary, Meppadi"
+      },
+      {
+        "id": "1015166845",
+        "type": "way",
+        "kind": "community_centre",
+        "name": "Unni Mathu Samsarika Nilayam"
+      },
+      {
+        "id": "1018149639",
+        "type": "way",
+        "kind": "post_office",
+        "name": "Rippon Post Office"
+      },
+      {
+        "id": "1203966299",
+        "type": "way",
+        "kind": "post_office",
+        "name": "Meppadi Post Office"
+      },
+      {
+        "id": "1204153144",
+        "type": "way",
+        "kind": "cafe",
+        "name": "Mocha"
+      },
+      {
+        "id": "1347587318",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1347587319",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1347587320",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1347587321",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1347587322",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1347587323",
+        "type": "way",
+        "kind": "restaurant",
+        "name": "Hotel River View"
+      },
+      {
+        "id": "1347587324",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1347587326",
+        "type": "way",
+        "kind": "college",
+        "name": "Government Polytechnic College Meppadi"
+      },
+      {
+        "id": "1347587327",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1352931319",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1353168834",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "1353168835",
+        "type": "way",
+        "kind": "shelter"
+      },
+      {
+        "id": "5870269521",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "Paris restaurant"
+      },
+      {
+        "id": "6359499503",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "MRR restaurant"
+      },
+      {
+        "id": "6359513298",
+        "type": "node",
+        "kind": "atm"
+      },
+      {
+        "id": "6615258534",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "Mess House"
+      },
+      {
+        "id": "7128100605",
+        "type": "node",
+        "kind": "place_of_worship"
+      },
+      {
+        "id": "7130140273",
+        "type": "node",
+        "kind": "hospital",
+        "name": "Family Health Centre Meppadi"
+      },
+      {
+        "id": "7130251385",
+        "type": "node",
+        "kind": "place_of_worship"
+      },
+      {
+        "id": "7483949522",
+        "type": "node",
+        "kind": "post_office",
+        "name": "Meppadi Post Office"
+      },
+      {
+        "id": "7483957448",
+        "type": "node",
+        "kind": "marketplace",
+        "name": "Meppadi Fish Market"
+      },
+      {
+        "id": "7483973003",
+        "type": "node",
+        "kind": "atm"
+      },
+      {
+        "id": "7483994592",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "Bismi Hotel"
+      },
+      {
+        "id": "7483994872",
+        "type": "node",
+        "kind": "atm"
+      },
+      {
+        "id": "7484025765",
+        "type": "node",
+        "kind": "bank",
+        "name": "Vijaya Bank"
+      },
+      {
+        "id": "7484044396",
+        "type": "node",
+        "kind": "place_of_worship",
+        "name": "Juma Masjid"
+      },
+      {
+        "id": "7484048934",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "Jaya Hotel"
+      },
+      {
+        "id": "7484063895",
+        "type": "node",
+        "kind": "money_transfer",
+        "name": "Kerala State Financial Enterprises"
+      },
+      {
+        "id": "7484092093",
+        "type": "node",
+        "kind": "bank",
+        "name": "Trikkaipetta Service Co-operative Bank"
+      },
+      {
+        "id": "7484094072",
+        "type": "node",
+        "kind": "bank",
+        "name": "Kalpetta Co-operative Urban Society"
+      },
+      {
+        "id": "7484121871",
+        "type": "node",
+        "kind": "school",
+        "name": "Benz Driving School Test Ground"
+      },
+      {
+        "id": "7484197306",
+        "type": "node",
+        "kind": "clinic",
+        "name": "Meppadi Govt.Homoeo Dispensary"
+      },
+      {
+        "id": "7484206450",
+        "type": "node",
+        "kind": "taxi",
+        "name": "Tourist Taxi Stand"
+      },
+      {
+        "id": "7484216405",
+        "type": "node",
+        "kind": "cafe",
+        "name": "Samovar"
+      },
+      {
+        "id": "7484232607",
+        "type": "node",
+        "kind": "bank",
+        "name": "South Indian Bank"
+      },
+      {
+        "id": "7484242201",
+        "type": "node",
+        "kind": "atm"
+      },
+      {
+        "id": "7484246940",
+        "type": "node",
+        "kind": "bank",
+        "name": "State Bank of India"
+      },
+      {
+        "id": "7484258782",
+        "type": "node",
+        "kind": "place_of_worship",
+        "name": "CSI Church"
+      },
+      {
+        "id": "7484259423",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "Palm Dew"
+      },
+      {
+        "id": "7484265380",
+        "type": "node",
+        "kind": "dentist",
+        "name": "Pilakkal Dental Clinic Meppadi"
+      },
+      {
+        "id": "7484269276",
+        "type": "node",
+        "kind": "bank",
+        "name": "Sulthan Bathery Co-operative Bank"
+      },
+      {
+        "id": "7998660968",
+        "type": "node",
+        "kind": "kindergarten",
+        "name": "Anganwadi CNo.  36"
+      },
+      {
+        "id": "7998684099",
+        "type": "node",
+        "kind": "hospital",
+        "name": "Gov.Veterinary Hospital"
+      },
+      {
+        "id": "7998734193",
+        "type": "node",
+        "kind": "post_depot",
+        "name": "Post office"
+      },
+      {
+        "id": "7999872868",
+        "type": "node",
+        "kind": "kindergarten",
+        "name": "Anganwadi CNo. 49"
+      },
+      {
+        "id": "8000480298",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi"
+      },
+      {
+        "id": "8000504023",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi"
+      },
+      {
+        "id": "8000910944",
+        "type": "node",
+        "kind": "kindergarten",
+        "name": "Anganawadi CNo. 51"
+      },
+      {
+        "id": "8002280947",
+        "type": "node",
+        "kind": "kindergarten",
+        "name": "Anganawadi CNo. 34"
+      },
+      {
+        "id": "8004229813",
+        "type": "node",
+        "kind": "kindergarten",
+        "name": "Anganawadi CNo. 45"
+      },
+      {
+        "id": "8005559364",
+        "type": "node",
+        "kind": "kindergarten",
+        "name": "Anganawadi CNo. 55"
+      },
+      {
+        "id": "8008895250",
+        "type": "node",
+        "kind": "school",
+        "name": "Cno.04 Nallannoor Anganwadi. Muppinad"
+      },
+      {
+        "id": "8013063644",
+        "type": "node",
+        "kind": "internet_cafe",
+        "name": "Akshaya Centre, Thazhearapetta, Thinapuram"
+      },
+      {
+        "id": "8403771172",
+        "type": "node",
+        "kind": "bank",
+        "name": "Central Bank of India"
+      },
+      {
+        "id": "8403951926",
+        "type": "node",
+        "kind": "place_of_worship",
+        "name": "shree maariyamman bhagahavathi temple"
+      },
+      {
+        "id": "8404003241",
+        "type": "node",
+        "kind": "fuel",
+        "name": "HP  petrol pump"
+      },
+      {
+        "id": "8404718361",
+        "type": "node",
+        "kind": "alternative",
+        "name": "puliyampatta aryavyhashala"
+      },
+      {
+        "id": "8405743671",
+        "type": "node",
+        "kind": "driving_school",
+        "name": "Shadow driving school"
+      },
+      {
+        "id": "8408287130",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "quassim hotel"
+      },
+      {
+        "id": "8408525486",
+        "type": "node",
+        "kind": "restaurant",
+        "name": "ajwa restaurant"
+      },
+      {
+        "id": "8408631344",
+        "type": "node",
+        "kind": "place_of_worship",
+        "name": "St.Joseph Chruch Meppadi"
+      },
+      {
+        "id": "8666800317",
+        "type": "node",
+        "kind": "hospital",
+        "name": "Moopanad Central Hospital"
+      },
+      {
+        "id": "8667688917",
+        "type": "node",
+        "kind": "community_centre",
+        "name": "Dr A P J Abdul Kalam Community Hall Meppadi"
+      },
+      {
+        "id": "8667718017",
+        "type": "node",
+        "kind": "hospital",
+        "name": "Community Health Center Meppadi"
+      },
+      {
+        "id": "8667718018",
+        "type": "node",
+        "kind": "police",
+        "name": "Police Station ,Meppadi"
+      },
+      {
+        "id": "8667830417",
+        "type": "node",
+        "kind": "hospital",
+        "name": "Government Homeo Dispensary Meppadi"
+      },
+      {
+        "id": "8667836317",
+        "type": "node",
+        "kind": "community_centre",
+        "name": "E M S Memorial Town Hall Meppadi"
+      },
+      {
+        "id": "8667918317",
+        "type": "node",
+        "kind": "veterinary",
+        "name": "Veterinary Hospital Meppadi"
+      },
+      {
+        "id": "8671967930",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi"
+      },
+      {
+        "id": "8671967931",
+        "type": "node",
+        "kind": "hospital",
+        "name": "A V T  Chulikka Estate Hospital"
+      },
+      {
+        "id": "8671985918",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi"
+      },
+      {
+        "id": "8675554617",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi"
+      },
+      {
+        "id": "8676064904",
+        "type": "node",
+        "kind": "place_of_worship"
+      },
+      {
+        "id": "8676064946",
+        "type": "node",
+        "kind": "place_of_worship",
+        "name": "Muthumariyamman Kovil"
+      },
+      {
+        "id": "8676396917",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi"
+      },
+      {
+        "id": "8676429817",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi 55 puthumala"
+      },
+      {
+        "id": "8678464518",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi 36 Puthakkolly"
+      },
+      {
+        "id": "8682062727",
+        "type": "node",
+        "kind": "alternative",
+        "name": "Jothi Pain And Paliative Care"
+      },
+      {
+        "id": "8682570217",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Anganwadi 49 Meppadi Town"
+      },
+      {
+        "id": "8682674218",
+        "type": "node",
+        "kind": "toilets",
+        "name": "Public Toilet Meppadi"
+      },
+      {
+        "id": "8734613814",
+        "type": "node",
+        "kind": "school",
+        "name": "rippon government high school"
+      },
+      {
+        "id": "9195272631",
+        "type": "node",
+        "kind": "community_centre",
+        "name": "Tazhe Arraippetta Maadrasa Hall"
+      },
+      {
+        "id": "9364731369",
+        "type": "node",
+        "kind": "community_centre",
+        "name": "Moopanad LC Church Hall"
+      },
+      {
+        "id": "9390692379",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Nursery"
+      },
+      {
+        "id": "9390761015",
+        "type": "node",
+        "kind": "childcare",
+        "name": "Maankunne Anganvadi"
+      },
+      {
+        "id": "9511157519",
+        "type": "node",
+        "kind": "police",
+        "name": "Police Station, Meppadi"
+      },
+      {
+        "id": "13046490501",
+        "type": "node",
+        "kind": "place_of_worship",
+        "name": "Chulika Krishna Temple"
+      },
+      {
+        "id": "13629361406",
+        "type": "node",
+        "kind": "taxi",
+        "name": "Rippon Auto Rickshaw Stand"
+      }
+    ]
+  }
+}
