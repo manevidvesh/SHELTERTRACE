@@ -13,8 +13,9 @@ import { HabitationDetailDrawer } from './components/assessment/HabitationDetail
 import { ParameterComparisonView } from './components/analytics/ParameterComparisonView';
 import { EvidenceView } from './components/evidence/EvidenceView';
 import { MethodologyView } from './components/methodology/MethodologyView';
+import { SpatialIntelligenceView } from './components/spatial/SpatialIntelligenceView';
 
-function getInitialRoute(): { view: 'landing' | 'app'; tab: 'assessment' | 'evidence' | 'methodology' } {
+function getInitialRoute(): { view: 'landing' | 'app'; tab: 'assessment' | 'evidence' | 'methodology' | 'spatial' } {
   if (typeof window === 'undefined') return { view: 'landing', tab: 'assessment' };
 
   const path = window.location.pathname.toLowerCase();
@@ -28,6 +29,9 @@ function getInitialRoute(): { view: 'landing' | 'app'; tab: 'assessment' | 'evid
     hash.includes('app') ||
     hash.includes('dashboard')
   ) {
+    if (hash.includes('spatial') || path.includes('spatial')) {
+      return { view: 'app', tab: 'spatial' };
+    }
     if (hash.includes('methodology') || path.includes('methodology')) {
       return { view: 'app', tab: 'methodology' };
     }
@@ -42,7 +46,7 @@ function getInitialRoute(): { view: 'landing' | 'app'; tab: 'assessment' | 'evid
 
 export function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'app'>(() => getInitialRoute().view);
-  const [activeTab, setActiveTab] = useState<'assessment' | 'evidence' | 'methodology'>(() => getInitialRoute().tab);
+  const [activeTab, setActiveTab] = useState<'assessment' | 'evidence' | 'methodology' | 'spatial'>(() => getInitialRoute().tab);
   const [selectedHabitationId, setSelectedHabitationId] = useState<string>('hab-mundakkai');
   const [activeFilter, setActiveFilter] = useState<SummaryFilter>('ALL');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
@@ -63,7 +67,7 @@ export function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const handleOpenApp = (tab: 'assessment' | 'evidence' | 'methodology' = 'assessment') => {
+  const handleOpenApp = (tab: 'assessment' | 'evidence' | 'methodology' | 'spatial' = 'assessment') => {
     setActiveTab(tab);
     setCurrentView('app');
     window.history.pushState({ view: 'app', tab }, '', `/dashboard#${tab}`);
@@ -254,6 +258,9 @@ export function App() {
 
         {/* Screen 3: Methodology View */}
         {activeTab === 'methodology' && <MethodologyView />}
+
+        {/* Screen 4: Spatial Intelligence View */}
+        {activeTab === 'spatial' && <SpatialIntelligenceView />}
       </main>
 
       {/* Global Minimalist Footer */}

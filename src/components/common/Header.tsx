@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Compass, FileText, Database, Info, X, ShieldCheck } from 'lucide-react';
+import { Compass, FileText, Database, Info, X, ShieldCheck, Layers } from 'lucide-react';
 import type { Habitation } from '../../types/habitation';
 
 interface HeaderProps {
-  activeTab: 'assessment' | 'evidence' | 'methodology';
-  setActiveTab: (tab: 'assessment' | 'evidence' | 'methodology') => void;
+  activeTab: 'assessment' | 'evidence' | 'methodology' | 'spatial';
+  setActiveTab: (tab: 'assessment' | 'evidence' | 'methodology' | 'spatial') => void;
   selectedHabitation: Habitation | null;
   onReturnToLanding?: () => void;
 }
@@ -107,6 +107,18 @@ export function Header({ activeTab, setActiveTab, selectedHabitation, onReturnTo
           >
             <Database className="w-3.5 h-3.5 text-stone-500" />
             <span>Evidence Dossier</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('spatial')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors cursor-pointer ${
+              activeTab === 'spatial'
+                ? 'bg-stone-100 text-stone-900 border border-stone-300 shadow-xs'
+                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+            }`}
+          >
+            <Layers className="w-3.5 h-3.5 text-stone-500" />
+            <span>Spatial Intelligence</span>
           </button>
 
           <button
