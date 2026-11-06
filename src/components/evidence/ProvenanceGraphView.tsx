@@ -61,38 +61,38 @@ export function ProvenanceGraphView({ habitation, result }: ProvenanceGraphViewP
     return 'MUTED';
   };
 
-  const getBadgeStyle = (state: string, baseBorder: string) => {
+  const getNodeStyle = (state: string, baseClass: string) => {
     if (state === 'SELECTED') {
-      return 'ring-2 ring-rose-400 bg-rose-950/80 text-white font-bold shadow-lg';
+      return 'bg-stone-900 text-white font-medium shadow-md ring-2 ring-stone-900';
     }
     if (state === 'UPSTREAM') {
-      return 'ring-1 ring-sky-400 bg-sky-950/60 text-sky-200 border-sky-500';
+      return 'bg-sky-50 text-sky-900 border-sky-300 ring-1 ring-sky-300';
     }
     if (state === 'DOWNSTREAM') {
-      return 'ring-1 ring-emerald-400 bg-emerald-950/60 text-emerald-200 border-emerald-500';
+      return 'bg-emerald-50 text-emerald-900 border-emerald-300 ring-1 ring-emerald-300';
     }
     if (state === 'MUTED') {
-      return 'opacity-40 bg-slate-950/50 border-slate-800 text-slate-500';
+      return 'opacity-35 bg-stone-50 border-stone-200 text-stone-400';
     }
-    return baseBorder;
+    return baseClass;
   };
 
   return (
-    <div className="bg-slate-900/90 rounded-lg border border-slate-800 overflow-hidden shadow-xl text-xs">
+    <div className="bg-white rounded-lg border border-stone-200 overflow-hidden shadow-xs text-xs">
       {/* Header */}
-      <div className="p-4 bg-slate-900 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="p-4 bg-stone-50/70 border-b border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <GitCommit className="w-4 h-4 text-rose-400" />
-          <h3 className="font-mono font-bold uppercase tracking-wider text-slate-100 text-xs">
-            Evidence Provenance Graph • Inspectable Dependency Trace
+          <GitCommit className="w-4 h-4 text-[#233f33]" />
+          <h3 className="font-semibold text-stone-900 text-xs tracking-tight">
+            Evidence Provenance Graph: Inspectable Dependency Trace
           </h3>
         </div>
-        <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400">
-          <span>Click any node to trace upstream source evidence or downstream decisions</span>
+        <div className="flex items-center gap-2 text-[11px] text-stone-500">
+          <span>Click any node to trace upstream evidence or downstream decisions</span>
           {selectedNodeId && (
             <button
               onClick={() => setSelectedNodeId(null)}
-              className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] transition-colors"
+              className="px-2 py-0.5 rounded bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 text-[11px] transition-colors cursor-pointer"
             >
               Clear Selection
             </button>
@@ -100,212 +100,180 @@ export function ProvenanceGraphView({ habitation, result }: ProvenanceGraphViewP
         </div>
       </div>
 
-      <div className="p-4 space-y-4">
-        {/* Visual Pipeline Grid (5 Tiers) */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-          {/* Tier 1: Source Datasets */}
+      {/* Dependency Status Callout */}
+      {activeNode ? (
+        <div className="p-3 bg-stone-50 border-b border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-stone-900">Inspecting Node:</span>
+            <span className="px-2 py-0.5 rounded bg-white text-stone-800 border border-stone-300 font-medium">
+              {activeNode.label}
+            </span>
+            <span className="text-stone-500 text-[11px]">({activeNode.type})</span>
+          </div>
+          <div className="flex items-center gap-3 text-[11px] text-stone-600">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-sky-600" />
+              <span>Upstream Sources ({upstreamIds.size})</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-600" />
+              <span>Downstream Impacts ({downstreamIds.size})</span>
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="p-2.5 bg-[#f4f2ee] border-b border-stone-200/80 text-[11px] text-stone-600 text-center">
+          Showing complete provenance DAG for {habitation.name}. Select any node below to trace its causal lineage.
+        </div>
+      )}
+
+      {/* Graph Pipeline Layout (5 Sequential Stages) */}
+      <div className="p-4 overflow-x-auto">
+        <div className="min-w-[840px] grid grid-cols-5 gap-3">
+          {/* Stage 1: Source Datasets */}
           <div className="space-y-2">
-            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase text-slate-400 pb-1.5 border-b border-slate-800">
-              <Database className="w-3.5 h-3.5 text-slate-400" />
-              <span>1. Source Datasets</span>
+            <div className="flex items-center gap-1.5 pb-1 border-b border-stone-200 font-medium text-stone-600 text-[11px]">
+              <Database className="w-3.5 h-3.5 text-stone-500" />
+              <span>1. Sources</span>
             </div>
             <div className="space-y-1.5">
-              {sourceDatasetNodes.map(node => {
-                const state = getNodeState(node.id);
-                return (
-                  <button
-                    key={node.id}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full p-2 rounded-lg border text-left transition-all ${getBadgeStyle(
-                      state,
-                      'bg-slate-950/80 border-slate-800 text-slate-300 hover:border-slate-700'
-                    )}`}
-                  >
-                    <div className="font-mono font-bold text-[11px] truncate">{node.label}</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5 line-clamp-2">{node.description}</div>
-                  </button>
-                );
-              })}
+              {sourceDatasetNodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
+                  className={`w-full p-2 rounded text-left border transition-all cursor-pointer ${getNodeStyle(
+                    getNodeState(node.id),
+                    'bg-white border-stone-200 text-stone-800 hover:border-stone-300 hover:bg-stone-50'
+                  )}`}
+                >
+                  <div className="font-medium text-[11px] leading-tight line-clamp-1">{node.label}</div>
+                  <div className="text-[10px] text-stone-500 mt-0.5 line-clamp-1">{node.description}</div>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Tier 2: Observation Evidence */}
+          {/* Stage 2: Observation Evidence */}
           <div className="space-y-2">
-            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase text-slate-400 pb-1.5 border-b border-slate-800">
-              <FileCheck className="w-3.5 h-3.5 text-sky-400" />
-              <span>2. Observations</span>
+            <div className="flex items-center gap-1.5 pb-1 border-b border-stone-200 font-medium text-stone-600 text-[11px]">
+              <FileCheck className="w-3.5 h-3.5 text-stone-500" />
+              <span>2. Evidence</span>
             </div>
             <div className="space-y-1.5">
-              {evidenceNodes.map(node => {
-                const state = getNodeState(node.id);
-                return (
-                  <button
-                    key={node.id}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full p-2 rounded-lg border text-left transition-all ${getBadgeStyle(
-                      state,
-                      'bg-slate-950/80 border-slate-800 text-slate-300 hover:border-slate-700'
-                    )}`}
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-bold text-[11px] truncate">{node.label}</span>
-                      <span className={`text-[9px] font-mono px-1 py-0.2 rounded ${
-                        node.status === 'CONFLICTING' ? 'bg-purple-950 text-purple-300' :
-                        node.status === 'INSUFFICIENT' ? 'bg-zinc-900 text-zinc-400' :
-                        'bg-slate-900 text-slate-400'
-                      }`}>
-                        {node.category}
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-slate-400 mt-0.5 line-clamp-2">{node.description}</div>
-                  </button>
-                );
-              })}
+              {evidenceNodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
+                  className={`w-full p-2 rounded text-left border transition-all cursor-pointer ${getNodeStyle(
+                    getNodeState(node.id),
+                    'bg-white border-stone-200 text-stone-800 hover:border-stone-300 hover:bg-stone-50'
+                  )}`}
+                >
+                  <div className="font-medium text-[11px] leading-tight line-clamp-1">{node.label}</div>
+                  <div className="text-[10px] text-stone-500 mt-0.5 line-clamp-2 leading-tight">
+                    {node.description}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Tier 3: Spatial Findings & Gaps */}
+          {/* Stage 3: Spatial Findings & Missing Flags */}
           <div className="space-y-2">
-            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase text-slate-400 pb-1.5 border-b border-slate-800">
-              <Compass className="w-3.5 h-3.5 text-amber-400" />
-              <span>3. Spatial Findings</span>
+            <div className="flex items-center gap-1.5 pb-1 border-b border-stone-200 font-medium text-stone-600 text-[11px]">
+              <Compass className="w-3.5 h-3.5 text-stone-500" />
+              <span>3. Findings</span>
             </div>
             <div className="space-y-1.5">
-              {findingNodes.map(node => {
-                const state = getNodeState(node.id);
-                return (
-                  <button
-                    key={node.id}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full p-2 rounded-lg border text-left transition-all ${getBadgeStyle(
-                      state,
-                      'bg-slate-950/80 border-slate-800 text-slate-300 hover:border-slate-700'
-                    )}`}
-                  >
-                    <div className="font-mono text-[10px] text-amber-300/90 truncate">{node.domain}</div>
-                    <div className="text-[11px] text-slate-200 mt-0.5 line-clamp-3">{node.description}</div>
-                  </button>
-                );
-              })}
+              {findingNodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
+                  className={`w-full p-2 rounded text-left border transition-all cursor-pointer ${getNodeStyle(
+                    getNodeState(node.id),
+                    'bg-white border-stone-200 text-stone-800 hover:border-stone-300 hover:bg-stone-50'
+                  )}`}
+                >
+                  <div className="font-medium text-[11px] leading-tight line-clamp-1">{node.label}</div>
+                  <div className="text-[10px] text-stone-500 mt-0.5 line-clamp-2 leading-tight">
+                    {node.description}
+                  </div>
+                </button>
+              ))}
 
-              {/* Explicit Missing Evidence Nodes */}
-              {missingNodes.map(node => {
-                const state = getNodeState(node.id);
-                return (
-                  <button
-                    key={node.id}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full p-2 rounded-lg border border-dashed border-amber-600/70 bg-amber-950/30 text-amber-200 text-left transition-all ${getBadgeStyle(
-                      state,
-                      'bg-amber-950/30 text-amber-200 hover:border-amber-500'
-                    )}`}
-                  >
-                    <div className="flex items-center gap-1 font-mono text-[10px] text-amber-300 font-bold">
-                      <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
-                      <span>DATA GAP: {node.label}</span>
-                    </div>
-                    <div className="text-[10px] text-amber-200/90 mt-0.5 leading-snug">{node.description}</div>
-                  </button>
-                );
-              })}
+              {missingNodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
+                  className={`w-full p-2 rounded text-left border border-dashed transition-all cursor-pointer ${getNodeStyle(
+                    getNodeState(node.id),
+                    'bg-stone-50 border-stone-300 text-stone-700 hover:border-stone-400'
+                  )}`}
+                >
+                  <div className="flex items-center gap-1 font-medium text-[11px] text-stone-700">
+                    <AlertCircle className="w-3 h-3 text-stone-500" />
+                    <span className="line-clamp-1">{node.label}</span>
+                  </div>
+                  <div className="text-[10px] text-stone-500 mt-0.5 line-clamp-2 leading-tight">
+                    {node.description}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Tier 4: Executed Decision Rules */}
+          {/* Stage 4: Decision Rules */}
           <div className="space-y-2">
-            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase text-slate-400 pb-1.5 border-b border-slate-800">
-              <Scale className="w-3.5 h-3.5 text-rose-400" />
-              <span>4. Triggered Rules</span>
+            <div className="flex items-center gap-1.5 pb-1 border-b border-stone-200 font-medium text-stone-600 text-[11px]">
+              <Scale className="w-3.5 h-3.5 text-stone-500" />
+              <span>4. Rules</span>
             </div>
             <div className="space-y-1.5">
-              {ruleNodes.map(node => {
-                const state = getNodeState(node.id);
-                return (
-                  <button
-                    key={node.id}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full p-2.5 rounded-lg border text-left transition-all ${getBadgeStyle(
-                      state,
-                      'bg-rose-950/40 border-rose-900/60 text-rose-200 hover:border-rose-700'
-                    )}`}
-                  >
-                    <div className="font-mono font-bold text-[11px] text-rose-300">{node.label}</div>
-                    <div className="text-[10px] text-slate-300 mt-1 leading-snug">{node.description}</div>
-                  </button>
-                );
-              })}
+              {ruleNodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
+                  className={`w-full p-2 rounded text-left border transition-all cursor-pointer ${getNodeStyle(
+                    getNodeState(node.id),
+                    'bg-white border-stone-200 text-stone-800 hover:border-stone-300 hover:bg-stone-50'
+                  )}`}
+                >
+                  <div className="font-medium text-[11px] text-stone-900 leading-tight line-clamp-1">
+                    {node.label}
+                  </div>
+                  <div className="text-[10px] text-stone-500 mt-0.5 line-clamp-2 leading-tight">
+                    {node.description}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Tier 5: Final Assessment Outcome */}
+          {/* Stage 5: Final Assessment Outcome */}
           <div className="space-y-2">
-            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase text-slate-400 pb-1.5 border-b border-slate-800">
-              <Award className="w-3.5 h-3.5 text-emerald-400" />
-              <span>5. Final Outcome</span>
+            <div className="flex items-center gap-1.5 pb-1 border-b border-stone-200 font-medium text-stone-600 text-[11px]">
+              <Award className="w-3.5 h-3.5 text-stone-500" />
+              <span>5. Outcome</span>
             </div>
             <div className="space-y-1.5">
-              {outcomeNodes.map(node => {
-                const state = getNodeState(node.id);
-                return (
-                  <button
-                    key={node.id}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    className={`w-full p-3 rounded-lg border text-left transition-all ${getBadgeStyle(
-                      state,
-                      'bg-slate-950 border-slate-700 text-slate-100 hover:border-slate-600 shadow-md'
-                    )}`}
-                  >
-                    <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1">
-                      Prioritisation Result:
-                    </span>
-                    <div className="font-mono font-bold text-xs text-rose-300 leading-snug">
-                      {node.label}
-                    </div>
-                    <div className="text-[10px] text-slate-300 mt-1.5 leading-snug">
-                      {result.primaryReason}
-                    </div>
-                  </button>
-                );
-              })}
+              {outcomeNodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
+                  className={`w-full p-2.5 rounded text-left border transition-all cursor-pointer ${getNodeStyle(
+                    getNodeState(node.id),
+                    'bg-stone-50 border-stone-300 text-stone-900 font-medium shadow-xs'
+                  )}`}
+                >
+                  <div className="text-xs font-semibold text-stone-900 leading-tight">{node.label}</div>
+                  <div className="text-[11px] text-stone-600 mt-1 leading-snug">
+                    {node.description}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
-
-        {/* Selected Node Inspector Drawer / Banner */}
-        {activeNode && (
-          <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 space-y-2">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                  Node Type: {activeNode.type}
-                </span>
-                <span className="font-bold text-slate-100 text-xs font-mono">{activeNode.label}</span>
-              </div>
-              <div className="flex items-center gap-3 text-[10px] font-mono text-slate-400">
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-sky-400"></span>
-                  Upstream Dependencies: {upstreamIds.size}
-                </span>
-                <span>•</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  Downstream Consequences: {downstreamIds.size}
-                </span>
-              </div>
-            </div>
-
-            <p className="text-slate-300 text-xs leading-relaxed font-sans">
-              {activeNode.description}
-            </p>
-
-            {activeNode.sourceReference && (
-              <div className="text-[10px] font-mono text-slate-400 pt-1">
-                <span className="text-slate-500">Source Lineage: </span>
-                <span className="text-slate-300">{activeNode.sourceOrg} — {activeNode.sourceReference}</span>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

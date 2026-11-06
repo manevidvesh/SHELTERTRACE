@@ -17,6 +17,7 @@ export function App() {
   const [selectedHabitationId, setSelectedHabitationId] = useState<string>('hab-mundakkai');
   const [activeFilter, setActiveFilter] = useState<SummaryFilter>('ALL');
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
+  const [isMatrixOpen, setIsMatrixOpen] = useState<boolean>(false);
 
   // Evaluate all habitations through deterministic assessment engine
   const resultsMap = useMemo(() => {
@@ -49,7 +50,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f8f7f4] text-stone-900 flex flex-col font-sans">
       {/* Universal Top Header */}
       <Header
         activeTab={activeTab}
@@ -62,25 +63,29 @@ export function App() {
         {/* Screen 1: Assessment View */}
         {activeTab === 'assessment' && (
           <div className="flex flex-col flex-1 space-y-4">
-            {/* KPI Assessment Summary */}
+            {/* Compact Investigation Summary Toolbar */}
             <AssessmentSummary
               results={resultsList}
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
+              isMatrixOpen={isMatrixOpen}
+              onToggleMatrix={() => setIsMatrixOpen(!isMatrixOpen)}
             />
 
-            {/* Evidence Quality vs Hazard Severity Matrix (Compact 2D Signature) */}
-            <EvidenceSeverityMatrix
-              habitations={WAYANAD_HABITATIONS}
-              resultsMap={resultsMap}
-              selectedHabitation={selectedHabitation}
-              onSelectHabitation={handleSelectHabitation}
-            />
+            {/* Collapsible 2D Contingency Matrix */}
+            {isMatrixOpen && (
+              <EvidenceSeverityMatrix
+                habitations={WAYANAD_HABITATIONS}
+                resultsMap={resultsMap}
+                selectedHabitation={selectedHabitation}
+                onSelectHabitation={handleSelectHabitation}
+              />
+            )}
 
-            {/* Split Map & Habitation List Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-[580px]">
-              {/* Left Column: Habitation List (5 Cols) */}
-              <div className="lg:col-span-5 h-[580px] flex flex-col">
+            {/* Split Map-First Workspace */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-[600px]">
+              {/* Left Column: Settlement List (5 Cols) */}
+              <div className="lg:col-span-5 h-[600px] flex flex-col">
                 <HabitationList
                   habitations={WAYANAD_HABITATIONS}
                   resultsMap={resultsMap}
@@ -91,7 +96,7 @@ export function App() {
               </div>
 
               {/* Right Column: Interactive Leaflet Map (7 Cols) with Drawer Overlay */}
-              <div className="lg:col-span-7 h-[580px] relative rounded-lg overflow-hidden border border-slate-800">
+              <div className="lg:col-span-7 h-[600px] relative rounded-lg overflow-hidden border border-stone-200 shadow-xs bg-stone-100">
                 <MapView
                   habitations={WAYANAD_HABITATIONS}
                   resultsMap={resultsMap}
@@ -99,7 +104,7 @@ export function App() {
                   onSelectHabitation={handleSelectHabitation}
                 />
 
-                {/* Selected Habitation Quick Drawer Overlay */}
+                {/* Selected Habitation Inspection Drawer Overlay */}
                 {isDrawerOpen && selectedHabitation && (
                   <div className="absolute top-3 left-3 z-[1000] w-80 max-w-[calc(100%-24px)] pointer-events-auto">
                     <HabitationDetailDrawer
@@ -131,8 +136,8 @@ export function App() {
       </main>
 
       {/* Global Minimalist Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-900/40 py-3 px-4 text-center text-xs text-slate-500 font-mono">
-        <span>SHELTERTRACE Decision Support Engine • Transparent Geospatial Evidence & Uncertainty Assessment</span>
+      <footer className="border-t border-stone-200 bg-white py-3 px-4 text-center text-xs text-stone-500">
+        <span>SHELTERTRACE Decision Support Engine • Evidence-Driven Geospatial Reconnaissance Prioritisation</span>
       </footer>
     </div>
   );

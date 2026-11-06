@@ -10,41 +10,41 @@ export function ConflictRegisterSection({ habitation }: ConflictRegisterSectionP
   const habitationConflicts = EVIDENCE_CONFLICT_REGISTER.filter(c => c.habitationId === habitation.id);
 
   return (
-    <div className="bg-slate-900/90 rounded-lg border border-slate-800 overflow-hidden shadow-xl text-xs p-4 space-y-4">
+    <div className="bg-white rounded-lg border border-stone-200 overflow-hidden shadow-xs text-xs p-4 space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-stone-200">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-purple-400" />
-          <h3 className="font-mono font-bold uppercase tracking-wider text-slate-100 text-xs">
+          <AlertTriangle className="w-4 h-4 text-rose-700" />
+          <h3 className="font-semibold text-stone-900 text-xs tracking-tight">
             Explicit Evidence Conflict Register ({habitationConflicts.length} recorded)
           </h3>
         </div>
-        <span className="text-[11px] font-mono text-slate-400">
-          Transparent Contradiction Preservation • Zero Silent Discarding
+        <span className="text-[11px] text-stone-500">
+          Contradiction Preservation • Zero Silent Discarding
         </span>
       </div>
 
-      {/* Mandatory Anti-Averaging Guardrail */}
-      <div className="p-3 rounded-lg bg-purple-950/40 border border-purple-800/60 flex items-start gap-2.5 text-[11px] text-purple-200">
-        <ShieldAlert className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+      {/* Methodological Guardrail */}
+      <div className="p-3 rounded bg-[#f4f2ee] border border-stone-200 flex items-start gap-2.5 text-xs text-stone-700">
+        <ShieldAlert className="w-4 h-4 text-[#233f33] shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <span className="font-mono font-bold text-purple-300">
+          <span className="font-semibold text-stone-900">
             Anti-Averaging Evidence Safeguard:
           </span>
-          <p className="leading-relaxed">
-            When evidence sources disagree, the system preserves both individual observations. Decision rules strictly prohibit averaging contradictory numbers, discarding older sources simply because newer ones exist, or picking the source that yields the lowest hazard. Conflicts remain explicit until resolved with documented justification.
+          <p className="text-[11px] text-stone-600 leading-relaxed">
+            When evidence sources disagree, the engine preserves both observations. Decision rules strictly prohibit averaging contradictory numbers, discarding older sources simply because newer ones exist, or picking the source that yields the lowest hazard. Conflicts remain explicit until resolved with documented justification.
           </p>
         </div>
       </div>
 
       {/* Conflicts List */}
       {habitationConflicts.length === 0 ? (
-        <div className="p-6 text-center text-slate-400 bg-slate-950/60 rounded-lg border border-slate-800/80 space-y-1">
-          <CheckCircle2 className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-          <span className="font-mono font-bold text-slate-200 block text-xs">
+        <div className="p-6 text-center text-stone-500 bg-stone-50 rounded-lg border border-stone-200 space-y-1">
+          <CheckCircle2 className="w-5 h-5 text-emerald-700 mx-auto mb-1.5" />
+          <span className="font-semibold text-stone-800 block text-xs">
             No Active Evidence Contradictions Recorded for {habitation.name}
           </span>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-stone-500">
             All supporting spatial and field reports are mutually consistent across observation domains.
           </p>
         </div>
@@ -59,94 +59,94 @@ export function ConflictRegisterSection({ habitation }: ConflictRegisterSectionP
                 key={conf.id}
                 className={`p-4 rounded-lg border space-y-3 transition-colors ${
                   isResolved
-                    ? 'bg-slate-950/80 border-slate-700'
+                    ? 'bg-stone-50 border-stone-200'
                     : isUnderReview
-                    ? 'bg-purple-950/30 border-purple-600/70'
-                    : 'bg-slate-950 border-slate-800'
+                    ? 'bg-rose-50/40 border-rose-200'
+                    : 'bg-white border-stone-200'
                 }`}
               >
                 {/* Conflict Status Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800/80">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-stone-200">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-slate-100 text-xs">
-                      Conflict Record ID: {conf.id}
+                    <span className="font-semibold text-stone-900 text-xs">
+                      Conflict Record: {conf.id}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                    <span className="text-[11px] text-stone-600 bg-white px-2 py-0.5 rounded border border-stone-200">
                       Target: {conf.geographicCoverage}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${
+                    <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${
                       isResolved
-                        ? 'bg-emerald-950/70 text-emerald-300 border-emerald-800'
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         : isUnderReview
-                        ? 'bg-purple-950 text-purple-300 border-purple-700'
-                        : 'bg-zinc-900 text-zinc-300 border-zinc-700'
+                        ? 'bg-rose-50 text-rose-800 border-rose-200'
+                        : 'bg-stone-100 text-stone-700 border-stone-200'
                     }`}>
                       Status: {conf.reviewStatus}
                     </span>
                     {conf.affectsAssessment && (
-                      <span className="px-2 py-0.5 rounded bg-rose-950 text-rose-300 font-mono text-[10px] font-bold border border-rose-800">
+                      <span className="px-2 py-0.5 rounded bg-red-50 text-red-800 font-medium text-[11px] border border-red-200">
                         Affects Assessment Urgency
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Disagreeing Sources */}
+                {/* Disagreeing Sources Side-by-Side */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="p-2.5 rounded bg-slate-900/70 border border-slate-800/80 space-y-1">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                  <div className="p-3 rounded bg-white border border-stone-200 space-y-1">
+                    <span className="text-[10px] text-stone-500 font-medium uppercase block">
                       Observational Source A:
                     </span>
-                    <div className="font-mono text-rose-300 text-[11px] font-bold">
+                    <div className="text-red-900 text-xs font-semibold">
                       {conf.conflictingSources[0]}
                     </div>
-                    <div className="text-[10px] font-mono text-slate-400">
-                      Date: {conf.observationDates[0]}
+                    <div className="text-[11px] text-stone-500">
+                      Observed: {conf.observationDates[0]}
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded bg-slate-900/70 border border-slate-800/80 space-y-1">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                  <div className="p-3 rounded bg-white border border-stone-200 space-y-1">
+                    <span className="text-[10px] text-stone-500 font-medium uppercase block">
                       Observational Source B:
                     </span>
-                    <div className="font-mono text-sky-300 text-[11px] font-bold">
+                    <div className="text-stone-900 text-xs font-semibold">
                       {conf.conflictingSources[1]}
                     </div>
-                    <div className="text-[10px] font-mono text-slate-400">
-                      Date: {conf.observationDates[1]}
+                    <div className="text-[11px] text-stone-500">
+                      Observed: {conf.observationDates[1]}
                     </div>
                   </div>
                 </div>
 
                 {/* Nature of Disagreement */}
-                <div className="p-2.5 rounded bg-slate-900/50 border border-slate-800 text-[11px] space-y-1">
-                  <span className="text-slate-400 font-mono text-[10px] uppercase font-bold block">
+                <div className="p-3 rounded bg-white border border-stone-200 text-xs space-y-1">
+                  <span className="text-stone-500 text-[10px] uppercase font-medium block">
                     Nature of Disagreement:
                   </span>
-                  <p className="text-slate-200 leading-relaxed font-sans">{conf.natureOfDisagreement}</p>
+                  <p className="text-stone-800 leading-relaxed">{conf.natureOfDisagreement}</p>
                 </div>
 
                 {/* Suggested Ground Verification */}
-                <div className="p-2.5 rounded bg-slate-900/50 border border-slate-800 text-[11px] space-y-1">
-                  <span className="text-emerald-400 font-mono text-[10px] uppercase font-bold block">
+                <div className="p-3 rounded bg-white border border-stone-200 text-xs space-y-1">
+                  <span className="text-emerald-800 text-[10px] uppercase font-medium block">
                     Required Ground Verification Directive:
                   </span>
-                  <p className="text-slate-300 leading-relaxed font-sans">{conf.suggestedVerification}</p>
+                  <p className="text-stone-700 leading-relaxed">{conf.suggestedVerification}</p>
                 </div>
 
                 {/* Documented Resolution Reason */}
                 {conf.resolutionReason && (
-                  <div className="p-2.5 rounded bg-slate-950 border border-slate-800 text-[11px] space-y-1">
-                    <span className="text-slate-400 font-mono text-[10px] uppercase font-bold block">
+                  <div className="p-3 rounded bg-stone-50 border border-stone-200 text-xs space-y-1">
+                    <span className="text-stone-500 text-[10px] uppercase font-medium block">
                       Resolution Rationale & Governance Record:
                     </span>
-                    <p className="text-slate-300 leading-relaxed font-sans italic">{conf.resolutionReason}</p>
+                    <p className="text-stone-800 leading-relaxed italic">{conf.resolutionReason}</p>
                     {conf.reviewedBy && (
-                      <div className="text-[10px] font-mono text-slate-400 pt-1">
-                        Reviewed by: <span className="text-slate-300 font-bold">{conf.reviewedBy}</span> on {conf.reviewedAt}
+                      <div className="text-[11px] text-stone-500 pt-1">
+                        Reviewed by: <span className="text-stone-700 font-medium">{conf.reviewedBy}</span> on {conf.reviewedAt}
                       </div>
                     )}
                   </div>

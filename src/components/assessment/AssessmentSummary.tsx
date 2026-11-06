@@ -1,4 +1,4 @@
-import { AlertTriangle, Clock, HelpCircle, CheckCircle2, FileCheck2 } from 'lucide-react';
+import { Grid, ChevronDown, ChevronUp } from 'lucide-react';
 import type { PrioritisationResult, HazardUrgency, EvidenceQuality } from '../../types/habitation';
 
 export type SummaryFilter = 'ALL' | HazardUrgency | EvidenceQuality;
@@ -7,210 +7,161 @@ interface AssessmentSummaryProps {
   results: PrioritisationResult[];
   activeFilter: SummaryFilter;
   onFilterChange: (filter: SummaryFilter) => void;
+  isMatrixOpen?: boolean;
+  onToggleMatrix?: () => void;
 }
 
-export function AssessmentSummary({ results, activeFilter, onFilterChange }: AssessmentSummaryProps) {
+export function AssessmentSummary({
+  results,
+  activeFilter,
+  onFilterChange,
+  isMatrixOpen,
+  onToggleMatrix,
+}: AssessmentSummaryProps) {
   const total = results.length;
 
-  // Hazard Urgency Counts (Sum === total)
+  // Hazard Urgency Counts
   const urgentCount = results.filter(r => r.hazardUrgency === 'URGENT').length;
   const elevatedCount = results.filter(r => r.hazardUrgency === 'ELEVATED').length;
-  const routineCount = results.filter(r => r.hazardUrgency === 'ROUTINE').length;
   const undeterminedCount = results.filter(r => r.hazardUrgency === 'UNDETERMINED').length;
+  const routineCount = results.filter(r => r.hazardUrgency === 'ROUTINE').length;
 
-  // Evidence Quality Counts (Sum === total)
+  // Evidence Quality Counts
   const completeCount = results.filter(r => r.evidenceQuality === 'COMPLETE').length;
   const partialCount = results.filter(r => r.evidenceQuality === 'PARTIAL').length;
   const insufficientCount = results.filter(r => r.evidenceQuality === 'INSUFFICIENT').length;
   const conflictingCount = results.filter(r => r.evidenceQuality === 'CONFLICTING').length;
 
   return (
-    <div className="space-y-2 mb-4">
-      {/* Top Bar: Total Assessed and Urgency Dimension */}
-      <div>
-        <div className="flex items-center justify-between mb-1.5 px-0.5">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300">
-              Dimension 1: Physical Hazard Urgency
-            </span>
-            <span className="text-[10px] text-slate-500 font-mono">
-              (Sum = {urgentCount + elevatedCount + undeterminedCount + routineCount} of {total} settlements)
-            </span>
-          </div>
-          {activeFilter !== 'ALL' && (
-            <button
-              onClick={() => onFilterChange('ALL')}
-              className="text-[10px] font-mono text-sky-400 hover:text-sky-300 underline"
-            >
-              Reset to Show All ({total})
-            </button>
-          )}
-        </div>
+    <div className="bg-white border border-stone-200 rounded-lg p-3 sm:px-4 shadow-xs space-y-2.5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        {/* Left: Primary Physical Hazard Filter Segments */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-xs text-stone-500 font-medium mr-1">Filter by Hazard:</span>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-          {/* Total Assessed */}
+          {/* All */}
           <button
             onClick={() => onFilterChange('ALL')}
-            className={`p-2.5 rounded-lg border text-left transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
               activeFilter === 'ALL'
-                ? 'bg-slate-800/90 border-slate-400 shadow-md ring-1 ring-slate-300/40'
-                : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                ? 'bg-stone-900 text-white shadow-xs'
+                : 'bg-stone-100 text-stone-600 hover:bg-stone-200/80 hover:text-stone-900'
             }`}
           >
-            <div className="flex items-center justify-between text-slate-400 mb-0.5">
-              <span className="text-[10px] font-medium uppercase font-mono">Total Assessed</span>
-              <FileCheck2 className="w-3.5 h-3.5 text-slate-400" />
-            </div>
-            <div className="text-lg font-bold font-mono text-slate-100">{total}</div>
-            <div className="text-[10px] text-slate-400">All habitations</div>
+            All ({total})
           </button>
 
-          {/* Urgent Hazard */}
+          {/* Urgent */}
           <button
             onClick={() => onFilterChange('URGENT')}
-            className={`p-2.5 rounded-lg border text-left transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
               activeFilter === 'URGENT'
-                ? 'bg-rose-950/80 border-rose-500 shadow-md ring-1 ring-rose-400/50'
-                : 'bg-slate-900/60 border-slate-800 hover:border-rose-900/40'
+                ? 'bg-red-800 text-white shadow-xs'
+                : 'bg-red-50 text-red-800 hover:bg-red-100 border border-red-200/80'
             }`}
           >
-            <div className="flex items-center justify-between text-rose-400 mb-0.5">
-              <span className="text-[10px] font-medium uppercase font-mono">Urgent</span>
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
-            </div>
-            <div className="text-lg font-bold font-mono text-rose-300">{urgentCount}</div>
-            <div className="text-[10px] text-rose-400/80">Direct impact / isolated</div>
+            <span className={`w-1.5 h-1.5 rounded-full ${activeFilter === 'URGENT' ? 'bg-white' : 'bg-red-600'}`} />
+            <span>Urgent ({urgentCount})</span>
           </button>
 
-          {/* Elevated Hazard */}
+          {/* Elevated */}
           <button
             onClick={() => onFilterChange('ELEVATED')}
-            className={`p-2.5 rounded-lg border text-left transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
               activeFilter === 'ELEVATED'
-                ? 'bg-amber-950/80 border-amber-500 shadow-md ring-1 ring-amber-400/50'
-                : 'bg-slate-900/60 border-slate-800 hover:border-amber-900/40'
+                ? 'bg-amber-800 text-white shadow-xs'
+                : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200/80'
             }`}
           >
-            <div className="flex items-center justify-between text-amber-400 mb-0.5">
-              <span className="text-[10px] font-medium uppercase font-mono">Elevated</span>
-              <Clock className="w-3.5 h-3.5 text-amber-400" />
-            </div>
-            <div className="text-lg font-bold font-mono text-amber-300">{elevatedCount}</div>
-            <div className="text-[10px] text-amber-400/80">Steep slope susceptibility</div>
+            <span className={`w-1.5 h-1.5 rounded-full ${activeFilter === 'ELEVATED' ? 'bg-white' : 'bg-amber-600'}`} />
+            <span>Elevated ({elevatedCount})</span>
           </button>
 
-          {/* Undetermined Hazard */}
+          {/* Undetermined */}
           <button
             onClick={() => onFilterChange('UNDETERMINED')}
-            className={`p-2.5 rounded-lg border text-left transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
               activeFilter === 'UNDETERMINED'
-                ? 'bg-slate-800 border-slate-400 shadow-md ring-1 ring-slate-300/40'
-                : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                ? 'bg-stone-700 text-white shadow-xs'
+                : 'bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-200'
             }`}
           >
-            <div className="flex items-center justify-between text-slate-400 mb-0.5">
-              <span className="text-[10px] font-medium uppercase font-mono">Undetermined</span>
-              <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
-            </div>
-            <div className="text-lg font-bold font-mono text-slate-200">{undeterminedCount}</div>
-            <div className="text-[10px] text-slate-400">Baseline gap / conflict</div>
+            <span className={`w-1.5 h-1.5 rounded-full ${activeFilter === 'UNDETERMINED' ? 'bg-white' : 'bg-stone-500'}`} />
+            <span>Undetermined ({undeterminedCount})</span>
           </button>
 
-          {/* Routine Baseline */}
+          {/* Routine */}
           <button
             onClick={() => onFilterChange('ROUTINE')}
-            className={`p-2.5 rounded-lg border text-left transition-all ${
+            className={`px-2.5 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
               activeFilter === 'ROUTINE'
-                ? 'bg-emerald-950/80 border-emerald-500 shadow-md ring-1 ring-emerald-400/50'
-                : 'bg-slate-900/60 border-slate-800 hover:border-emerald-900/40'
+                ? 'bg-emerald-800 text-white shadow-xs'
+                : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200/80'
             }`}
           >
-            <div className="flex items-center justify-between text-emerald-400 mb-0.5">
-              <span className="text-[10px] font-medium uppercase font-mono">Routine</span>
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            </div>
-            <div className="text-lg font-bold font-mono text-emerald-300">{routineCount}</div>
-            <div className="text-[10px] text-emerald-400/80">Gentle slope / verified</div>
+            <span className={`w-1.5 h-1.5 rounded-full ${activeFilter === 'ROUTINE' ? 'bg-white' : 'bg-emerald-600'}`} />
+            <span>Routine ({routineCount})</span>
           </button>
         </div>
+
+        {/* Right: Matrix View Toggle Button */}
+        {onToggleMatrix && (
+          <button
+            onClick={onToggleMatrix}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium border transition-colors cursor-pointer shrink-0 ${
+              isMatrixOpen
+                ? 'bg-[#233f33] text-white border-[#233f33]'
+                : 'bg-stone-50 text-stone-700 hover:bg-stone-100 border-stone-300'
+            }`}
+          >
+            <Grid className="w-3.5 h-3.5" />
+            <span>Analytical 2D Matrix</span>
+            {isMatrixOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+        )}
       </div>
 
-      {/* Bottom Bar: Evidence Quality Dimension */}
-      <div className="pt-1.5 border-t border-slate-800/80">
-        <div className="flex items-center gap-2 mb-1.5 px-0.5">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
-            Dimension 2: Epistemic Evidence Quality
-          </span>
-          <span className="text-[10px] text-slate-500 font-mono">
-            (Sum = {completeCount + partialCount + insufficientCount + conflictingCount} of {total} settlements)
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {/* Complete */}
+      {/* Epistemic Evidence Quality Sub-Bar (Subtle, non-competing) */}
+      <div className="pt-2 border-t border-stone-100 flex flex-wrap items-center justify-between text-[11px] text-stone-500 gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-medium text-stone-600">Epistemic Evidence Quality:</span>
           <button
-            onClick={() => onFilterChange('COMPLETE')}
-            className={`p-2 rounded-lg border text-left transition-all ${
-              activeFilter === 'COMPLETE'
-                ? 'bg-emerald-950/80 border-emerald-500 ring-1 ring-emerald-400/40'
-                : 'bg-slate-900/40 border-slate-800 hover:border-slate-700'
-            }`}
+            onClick={() => onFilterChange(activeFilter === 'COMPLETE' ? 'ALL' : 'COMPLETE')}
+            className={`hover:underline cursor-pointer ${activeFilter === 'COMPLETE' ? 'font-bold text-stone-900 underline' : ''}`}
           >
-            <div className="flex items-center justify-between text-emerald-400 mb-0.5">
-              <span className="text-[10px] font-mono uppercase">Complete Quality</span>
-              <span className="text-sm font-bold font-mono">{completeCount}</span>
-            </div>
-            <div className="text-[10px] text-slate-400">All critical baseline present</div>
+            Complete: {completeCount}
           </button>
-
-          {/* Partial */}
+          <span>•</span>
           <button
-            onClick={() => onFilterChange('PARTIAL')}
-            className={`p-2 rounded-lg border text-left transition-all ${
-              activeFilter === 'PARTIAL'
-                ? 'bg-amber-950/80 border-amber-500 ring-1 ring-amber-400/40'
-                : 'bg-slate-900/40 border-slate-800 hover:border-slate-700'
-            }`}
+            onClick={() => onFilterChange(activeFilter === 'PARTIAL' ? 'ALL' : 'PARTIAL')}
+            className={`hover:underline cursor-pointer ${activeFilter === 'PARTIAL' ? 'font-bold text-stone-900 underline' : ''}`}
           >
-            <div className="flex items-center justify-between text-amber-400 mb-0.5">
-              <span className="text-[10px] font-mono uppercase">Partial Quality</span>
-              <span className="text-sm font-bold font-mono">{partialCount}</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Baseline ok; field audit pending</div>
+            Partial: {partialCount}
           </button>
-
-          {/* Insufficient */}
+          <span>•</span>
           <button
-            onClick={() => onFilterChange('INSUFFICIENT')}
-            className={`p-2 rounded-lg border text-left transition-all ${
-              activeFilter === 'INSUFFICIENT'
-                ? 'bg-zinc-800 border-zinc-400 ring-1 ring-zinc-300/40'
-                : 'bg-slate-900/40 border-slate-800 hover:border-slate-700'
-            }`}
+            onClick={() => onFilterChange(activeFilter === 'INSUFFICIENT' ? 'ALL' : 'INSUFFICIENT')}
+            className={`hover:underline cursor-pointer ${activeFilter === 'INSUFFICIENT' ? 'font-bold text-stone-900 underline' : ''}`}
           >
-            <div className="flex items-center justify-between text-zinc-300 mb-0.5">
-              <span className="text-[10px] font-mono uppercase">Insufficient Data</span>
-              <span className="text-sm font-bold font-mono">{insufficientCount}</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Critical baseline data missing</div>
+            Insufficient: {insufficientCount}
           </button>
-
-          {/* Conflicting */}
+          <span>•</span>
           <button
-            onClick={() => onFilterChange('CONFLICTING')}
-            className={`p-2 rounded-lg border text-left transition-all ${
-              activeFilter === 'CONFLICTING'
-                ? 'bg-purple-950/80 border-purple-500 ring-1 ring-purple-400/40'
-                : 'bg-slate-900/40 border-slate-800 hover:border-slate-700'
-            }`}
+            onClick={() => onFilterChange(activeFilter === 'CONFLICTING' ? 'ALL' : 'CONFLICTING')}
+            className={`hover:underline cursor-pointer ${activeFilter === 'CONFLICTING' ? 'font-bold text-stone-900 underline' : ''}`}
           >
-            <div className="flex items-center justify-between text-purple-400 mb-0.5">
-              <span className="text-[10px] font-mono uppercase">Conflicting Data</span>
-              <span className="text-sm font-bold font-mono">{conflictingCount}</span>
-            </div>
-            <div className="text-[10px] text-slate-400">Contradiction in primary layer</div>
+            Conflicting: {conflictingCount}
           </button>
         </div>
+
+        {activeFilter !== 'ALL' && (
+          <button
+            onClick={() => onFilterChange('ALL')}
+            className="text-[11px] text-stone-600 hover:text-stone-900 underline cursor-pointer"
+          >
+            Clear filter (show all {total})
+          </button>
+        )}
       </div>
     </div>
   );

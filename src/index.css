@@ -1,51 +1,63 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-/* Custom utility styles for dense geospatial intelligence UI */
+/* Base cartographic & investigation typography and surfaces */
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 antialiased font-sans select-none;
+    @apply bg-[#f8f7f4] text-stone-900 antialiased font-sans select-none;
     overflow-x: hidden;
   }
 }
 
-/* Custom scrollbar for data tables and logs */
+/* Subtle, unobtrusive scrollbar for data tables and side panels */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #f1efe9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #d6d3cb;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #b8b4a9;
 }
 
-/* Leaflet map custom override to fit dark geospatial theme */
+/* Leaflet map styles tailored for clean geospatial cartography */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background-color: #0b1120 !important;
+  background-color: #f4f2ee !important;
   font-family: inherit;
 }
 
 .leaflet-popup-content-wrapper {
-  background-color: #0f172a !important;
-  color: #f1f5f9 !important;
-  border: 1px solid #334155 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7) !important;
+  background-color: #ffffff !important;
+  color: #1c1917 !important;
+  border: 1px solid #e7e5e4 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
 }
 
 .leaflet-popup-tip {
-  background-color: #0f172a !important;
+  background-color: #ffffff !important;
 }
 
 .leaflet-popup-content {
-  margin: 12px 14px !important;
+  margin: 10px 12px !important;
   line-height: 1.4 !important;
+  font-family: inherit;
+}
+
+.leaflet-tooltip {
+  background-color: #ffffff !important;
+  color: #1c1917 !important;
+  border: 1px solid #e7e5e4 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  font-family: inherit;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
 }
